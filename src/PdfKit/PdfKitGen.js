@@ -35,30 +35,30 @@ export const PdfKitGen = async (setPdf) => {
   // setPdf(val3);
 
   // console.log('data', doc._store.chunks);
-  doc.on('data', function (result) {
-    console.log('result', result);
-    console.count('data from pdfkit: ');
-    // Get the data from the PDFDocument
-    // const data = Buffer.concat(doc._store.chunks);
+  // doc.on('data', function (result) {
+  //   console.log('result', result);
+  //   console.count('data from pdfkit: ');
+  //   // Get the data from the PDFDocument
+  //   // const data = Buffer.concat(doc._store.chunks);
 
-    // Create a Blob using the data
-    const blob = new Blob([result], { type: 'application/pdf' });
+  //   // Create a Blob using the data
+  //   const blob = new Blob([result], { type: 'application/pdf' });
 
-    // Create a Blob URL for display in the browser
-    const url = URL.createObjectURL(blob);
+  //   // Create a Blob URL for display in the browser
+  //   const url = URL.createObjectURL(blob);
 
-    // Now you can use the blob or blob URL as needed
-    // For example, you can display the PDF in an iframe:
-    // const iframe = document.getElementById('pdfFrame');
-    // iframe.src = url;
-    setPdf(url);
-  });
-
-  // stream.on('finish', async function () {
-  //   const val = stream.toBlob('application/pdf');
-  //   const val3 = await readAsDataUri(val);
-  //   setPdf(val3);
+  //   // Now you can use the blob or blob URL as needed
+  //   // For example, you can display the PDF in an iframe:
+  //   // const iframe = document.getElementById('pdfFrame');
+  //   // iframe.src = url;
+  //   setPdf(url);
   // });
+
+  stream.on('finish', async function () {
+    const val = stream.toBlob('application/pdf');
+    const val3 = await readAsDataUri(val);
+    setPdf(val3);
+  });
 };
 
 export async function readAsDataUri(file) {
