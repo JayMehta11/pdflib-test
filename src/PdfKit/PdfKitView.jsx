@@ -9,11 +9,26 @@ const PdfKitView = () => {
 
   useEffect(() => {
     onCreate();
+    const getPdf = async () => {
+      const res = await fetch('http://localhost:3000/pdf');
+      const response = await res.json();
+      // console.log('response', response.body);
+      // const val3 = await readAsDataUri(response.data.body);
+      setPdf('data:application/pdf;base64,' + response.body);
+    };
+    // getPdf();
   }, []);
 
-  const onCreate = async () => {
-    const value = await PdfKitGen(setPdf);
-    console.log('value', value);
+  // useEffect(() => {
+  //   if (!pdf.length) return;
+  //   const convert = async () => {
+  //     const res = await PDFtoPNG([pdf]);
+  //     console.log('res', res);
+  //   };
+  //   convert();
+  // }, [pdf]);
+  const onCreate = () => {
+    PdfKitGen(setPdf);
     // setPdf(value);
   };
 
@@ -28,6 +43,13 @@ const PdfKitView = () => {
         <p>unable to display file</p>
       </object>
       <button onClick={onCreate}>Create a pdfkit</button>
+      <img
+        id='tux'
+        crossOrigin='anonymous'
+        src='https://images.pexels.com/lib/api/pexels.png'
+        style={{ display: 'none' }}
+        alt='tux'
+      />
     </div>
   );
 };

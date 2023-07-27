@@ -30,33 +30,32 @@ export const PdfKitGen = async (setPdf) => {
   doc.text(
     ' એક સરકારી સંસ્થા, એજન્સી કે વિભાગ અન્ય સરકારી સંસ્થા, એજન્સી કે વિભાગ સાથે વાણિજયરહિત (non-commercial) સંદેશાવ્યવહાર કરે, તો તેને સરકારથી સરકાર (026) તરીકે ઓળખવામાં આવે છે. 1૧ ખર્ચાને ઘટાડવા, પ્રક્રિયાઓને સુનિયોજિત બનાવવા અને કાર્યાલયોને વધુ અસરકાર '
   );
-  doc.end();
+  doc.image(getBase64Image('tux'), 0, 15, { width: 300 }).text('Proportional to width', 0, 0);
   // const val3 = await readAsDataUri(doc);
   // setPdf(val3);
+  let buffers = [];
+  doc.on('data', function (result) {
+    // console.log('result', result);
+    // buffers.push.bind(result.buffer);
+    // const blob = new Blob([result], { type: 'application/pdf' });
+    // const url = URL.createObjectURL(blob);
+    // setPdf(url);
+  });
 
-  // console.log('data', doc._store.chunks);
-  // doc.on('data', function (result) {
-  //   console.log('result', result);
-  //   console.count('data from pdfkit: ');
-  //   // Get the data from the PDFDocument
-  //   // const data = Buffer.concat(doc._store.chunks);
-
-  //   // Create a Blob using the data
-  //   const blob = new Blob([result], { type: 'application/pdf' });
-
-  //   // Create a Blob URL for display in the browser
-  //   const url = URL.createObjectURL(blob);
-
-  //   // Now you can use the blob or blob URL as needed
-  //   // For example, you can display the PDF in an iframe:
-  //   // const iframe = document.getElementById('pdfFrame');
-  //   // iframe.src = url;
-  //   setPdf(url);
-  // });
+  doc.on('end', async () => {
+    // console.log('buffers', buffers);
+    // const blob = new Blob([new Uint8Array(buffers)], { type: 'application/pdf' });
+    // console.log('blob', blob);
+    // const res = await readAsArrayBuffer(blob);
+    // const arrayBuffer = new ArrayBuffer(buffers);
+    // console.log('pdf buffer', res);
+  });
+  doc.end();
 
   stream.on('finish', async function () {
     const val = stream.toBlob('application/pdf');
     const val3 = await readAsDataUri(val);
+    // console.log('val3', val3);
     setPdf(val3);
   });
 };
@@ -73,4 +72,33 @@ export async function readAsDataUri(file) {
     });
     reader.readAsDataURL(file);
   });
+}
+
+export async function readAsArrayBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener('loadend', (_e) => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      } else {
+        reject(reader.error);
+      }
+    });
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function getBase64Image(img_id) {
+  // Create an empty canvas element
+  const img = document.getElementById(img_id);
+  var canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  // Copy the image contents to the canvas
+  var ctx = canvas.getContext('2d');
+  ctx.globalAlpha = 0.4;
+  ctx.drawImage(img, 0, 0);
+  // Get the data-URL formatted image
+  var dataURL = canvas.toDataURL('image/png');
+  return dataURL;
 }

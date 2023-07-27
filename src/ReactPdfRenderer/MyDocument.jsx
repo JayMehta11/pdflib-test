@@ -55,11 +55,11 @@ export const MyDocument = () => {
         <Text>Section #1</Text>
       </View> */}
         <View ref={viewRef}>
-          <Text x={60} y={10} ref={textRef} wrap={false} debug={true}>
+          <Text ref={textRef} wrap={false} style={{ top: 100, left: 100 }}>
             Section #2 સરકારથી સરકાર (Government to Government) એક સરકારી સંસ્થા, એજન્સી કે વિભાગ
             અન્યસંસ્થા છે, જ્યારે 20 પ્રતિકૃતિમાં ગ્રાહક એક સ્વતંત્ર વ્યક્તિ છે. afafadfadfa
           </Text>
-          <Rect height={10} width={10} />
+          <Rect height={100} width={100} />
           <Text>
             સરકારી સંસ્થા, એજન્સી કે વિભાગ સાથે વાણિજયરહિત (non-commercial) સંદેશાવ્યવહાર કરે, તો
             તેને
