@@ -5,45 +5,48 @@ import BlobStream from 'blob-stream';
 import PDFDocument from 'pdfkit/js/pdfkit.standalone';
 // import PDFDocument from 'pdfkit';
 
-const jsonData = [
-  { question: "3 X 70 =", answer: "" },
-  { question: "30 X 7 =", answer: "" },
-  { question: "40 X 6 =", answer: "" },
-  { question: "30 X 6 =", answer: "" },
-  { question: "70 X 7 =", answer: "" },
-  { question: "4 X 70 =", answer: "" },
-  { question: "2 X 70 =", answer: "" },
-  { question: "80 X 7 =", answer: "" },
-  { question: "40 X 8 =", answer: "" },
-  { question: "2 X 60 =", answer: "" },
-  { question: "90 X 4 =", answer: "" },
-  { question: "4 X 50 =", answer: "" },
-  { question: "40 X 6 =", answer: "" },
-  { question: "30 X 6 =", answer: "" },
-  { question: "70 X 7 =", answer: "" },
-  { question: "4 X 70 =", answer: "" },
-  { question: "2 X 70 =", answer: "" },
-  { question: "80 X 7 =", answer: "" },
-  { question: "40 X 8 =", answer: "" },
-  { question: "2 X 60 =", answer: "" },
-
-]; 
-
-// Helper function to convert a number to its Hindi numeral representation
-function numberToHindi(num) {
-  const hindiNumerals = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
-  return num.toString().replace(/\d/g, (digit) => hindiNumerals[digit]);
+async function imageToBase64(url) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Error fetching or converting the image:', error);
+    return null;
+  }
 }
 
-// Convert numerical values in jsonData to Hindi numerals
-jsonData.forEach((item) => {
-  item.question = item.question.replace(/\d+/g, (num) => numberToHindi(num));
-  item.answer = item.answer.replace(/\d+/g, (num) => numberToHindi(num));
-});
+const jsonData = [
+  { question: "३‍ X ७० =", answer: "" },
+  { question: "७० X ३‍ =", answer: "" },
+  { question: "२ X ९० =", answer: "" },
+  { question: "९० X ३ =", answer: "" },
+  { question: "८० X ५ =", answer: "" },
+  { question: "७ X ४० =", answer: "" },
+  { question: "२ X ९० =", answer: "" },
+  { question: "७० X ३‍ =", answer: "" },  
+  { question: "८० X ५ =", answer: "" },
+  { question: "७ X ४० =", answer: "" },
+  { question: "२ X ९० =", answer: "" },
+  { question: "७० X ३‍ =", answer: "" },
+  { question: "३‍ X ७० =", answer: "" },
+  { question: "७० X ३‍ =", answer: "" },
+  { question: "२ X ९० =", answer: "" },
+  { question: "७० X ३‍ =", answer: "" },
+  { question: "३‍ X ७० =", answer: "" },
+  { question: "७० X ३‍ =", answer: "" },
+  // ... add more data as needed
+];
 
 const header = async(doc) => {
   doc.fontSize(24).font('NotoSansDevanagari-Regular', 'bold');
-  doc.text("द्विअंक गुणा", 230, 40);
+  doc.text("द्विअंक गुणा", 220, 45);
 
   doc.fontSize(17).font('NotoSansDevanagari-Regular', 'normal');
   doc.text("नाम:", 20, 100);
@@ -86,24 +89,6 @@ const body = async(doc) => {
     // doc.moveTo(30, 600).lineTo(515, 600).lineWidth(2);
 }
 
-
-async function imageToBase64(url) {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        resolve(reader.result);
-      };
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error('Error fetching or converting the image:', error);
-    return null;
-  }
-}
-
 const footer = async(doc) => {
   doc.moveTo(0, 780).lineTo(615, 780).lineWidth(2).stroke();
 
@@ -113,7 +98,7 @@ const footer = async(doc) => {
   const imagePath = '/SmartPaperLogo.jpeg'; 
 
   const base64url = await imageToBase64(imagePath);
-  doc.image(`${base64url}`, 270, 800, { scale: 0.3 });
+  doc.image(`${base64url}`, 280, 800, { scale: 0.3 });
   // console.log(base64url);
 
   // doc.quadraticCurveTo(130, 200, 150, 120).stroke();
@@ -122,18 +107,7 @@ const footer = async(doc) => {
 
 
 const qrCode = async(doc) => {
-  const qr1 = '/top_left.jpg';
-  const qr2 = '/top_right.jpg';
-  const qr3 = '/bottom_left.jpg';
-  const qr4 = '/bottom_right.jpg';
-  const qr1base64 = await imageToBase64(qr1);
-  const qr2base64 = await imageToBase64(qr2);
-  const qr3base64 = await imageToBase64(qr3);
-  const qr4base64 = await imageToBase64(qr4);
-  doc.image(`${qr1base64}`, 10, 10, { scale: 0.07 });
-  doc.image(`${qr2base64}`, 550, 10, { scale: 0.07 });
-  doc.image(`${qr3base64}`, 10, 795, { scale: 0.07 });
-  doc.image(`${qr4base64}`, 550, 795, { scale: 0.07 });
+  
 }
 
 export const PdfKitGen = async (setPdf) => {
@@ -154,8 +128,6 @@ export const PdfKitGen = async (setPdf) => {
 
   // await qrCode(doc);
   // doc.image('../assets/top_left.jpg',30,30,{width: 30, height: 30}).text("Test",30,20);
-
-  await qrCode(doc);
 
   await header(doc); 
 

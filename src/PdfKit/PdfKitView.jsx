@@ -28,6 +28,7 @@ const PdfKitView = () => {
         <p>unable to display file</p>
       </object>
       <button onClick={onCreate}>Create a pdfkit</button>
+      {/* <img id='image64' src='/SmartPaperLogo.jpeg' style={{display:'none'}} alt='test' ></img> */}
     </div>
   );
 };
