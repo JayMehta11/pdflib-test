@@ -37,6 +37,7 @@ Font.register({
 const styles = StyleSheet.create({
   page: {
     // flexDirection: 'row',
+    fontSize: '12px',
     backgroundColor: '#E4E4E4',
     // fontStyle: 'normal',
     // fontFamily: 'Noto Sans Gujarati',
