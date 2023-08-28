@@ -1,5 +1,5 @@
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js'; // <-- vfs_fonts has to be imported before pdfmake
+import pdfMake from 'pdfmake';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const PdfMakeGen = async (setPdf) => {
