@@ -1,9 +1,19 @@
 import { Font } from '@react-pdf/renderer';
-import { Rect } from '@react-pdf/renderer';
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
-import { useEffect } from 'react';
-import { useRef } from 'react';
+// const GUJSTRING = process.env.GUJARATI_STRING;
 
+Font.register({
+  family: 'Noto Serif Bengali',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  src: 'https://fonts.gstatic.com/s/notoserifbengali/v19/hYkuPvggTvnzO14VSXltirUdnnkt1pwmWrprmO7RjE0a5BtdATYU1crFaM_5JfcAHnqn.ttf',
+});
+Font.register({
+  family: 'Noto Sans Telugu',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  src: 'https://fonts.gstatic.com/s/notosanstelugu/v25/0FlxVOGZlE2Rrtr-HmgkMWJNjJ5_RyT8o8c7fHkeg-esVC5dzHkHIJQqrEntezbqQQ.ttf',
+});
 Font.register({
   family: 'Noto Sans',
   fontStyle: 'normal',
@@ -16,65 +26,52 @@ Font.register({
   fontWeight: 400,
   src: 'https://fonts.gstatic.com/s/notosansgujarati/v23/wlpWgx_HC1ti5ViekvcxnhMlCVo3f5pv17ivlzsUB14gg1TMR2Gw4VceEl7MA_ypFwPM.ttf',
 });
-Font.register({
-  family: 'Noto Serif Gujarati',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  src: 'https://fonts.gstatic.com/s/notoserifgujarati/v26/hESa6WBlOixO-3OJ1FTmTsmqlBRUJBVkcgNLpdsspzP2HuYycIzu.ttf',
-});
+// Font.register({
+//   family: 'Noto Serif Gujarati',
+//   fontStyle: 'normal',
+//   fontWeight: 400,
+//   src: 'https://fonts.gstatic.com/s/notoserifgujarati/v26/hESa6WBlOixO-3OJ1FTmTsmqlBRUJBVkcgNLpdsspzP2HuYycIzu.ttf',
+// });
 
 // Create styles
 const styles = StyleSheet.create({
   page: {
     // flexDirection: 'row',
     backgroundColor: '#E4E4E4',
-    fontFamily: 'Noto Serif Gujarati',
+    // fontStyle: 'normal',
+    // fontFamily: 'Noto Sans Gujarati',
   },
   section: {
     margin: 10,
     padding: 10,
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1',
   },
 });
 
 // Create Document Component
 export const MyDocument = () => {
-  const textRef = useRef();
-  const viewRef = useRef();
-  useEffect(() => {
-    console.log('tempRef', textRef);
-  }, [textRef]);
-
-  const getRender = (val) => {
-    console.log('render val', val);
-  };
   return (
     <Document>
       <Page size='A4' style={styles.page}>
-        {/* <View style={styles.section}>
-        <Text>Section #1</Text>
-      </View> */}
-        <View ref={viewRef}>
-          <Text ref={textRef} wrap={false} style={{ top: 100, left: 100 }}>
-            Section #2 સરકારથી સરકાર (Government to Government) એક સરકારી સંસ્થા, એજન્સી કે વિભાગ
-            અન્યસંસ્થા છે, જ્યારે 20 પ્રતિકૃતિમાં ગ્રાહક એક સ્વતંત્ર વ્યક્તિ છે. afafadfadfa
+        <View style={styles.section}>
+          <Text style={{ fontFamily: 'Noto Sans', marginBottom: '15pt' }}>
+            {import.meta.env.VITE_ENGLISH_STRING}
           </Text>
-          <Rect height={100} width={100} />
-          <Text>
-            સરકારી સંસ્થા, એજન્સી કે વિભાગ સાથે વાણિજયરહિત (non-commercial) સંદેશાવ્યવહાર કરે, તો
-            તેને
+          <Text style={{ fontFamily: 'Noto Sans', marginBottom: '15pt' }}>
+            {import.meta.env.VITE_HINDI_STRING}
           </Text>
-          <Text>
-            સરકારથી સરકાર (026) તરીકે ઓળખવામાં આવે છે. 1૧ ખર્ચાને ઘટાડવા, પ્રક્રિયાઓને સુનિયોજિત
+          <Text style={{ fontFamily: 'Noto Sans Gujarati', marginBottom: '15pt' }}>
+            {import.meta.env.VITE_GUJARATI_STRING}
           </Text>
-          <Text>
-            બનાવવા અને કાર્યાલયોને વધુ અસરકારક બનાવવા આ માહિતીનું વિવરણ મદદરૂપ બને છે. ઉપર વિવેચિત
+          <Text style={{ fontFamily: 'Noto Serif Bengali', marginBottom: '15pt' }}>
+            {import.meta.env.VITE_BENGALI_STRING}
           </Text>
-          <Text>
-            તમામ ઇ-કોમર્સ પ્રતિકૃતિઓમાં 820 અને 828 વિપુલ પ્રમાણમાં ઉપયોગમાં લેવામાં આવતી પ્રતિકૃતિઓ
+          <Text style={{ fontFamily: 'Noto Sans Telugu', marginBottom: '15pt' }}>
+            {import.meta.env.VITE_TELUGU_STRING}
           </Text>
-          <Text>છે. આ બંને પ્રતિકૃતિમાં મુખ્ય તફાવત ગ્રાહક& છે પ્રતિકૂતિમાં </Text>
-          <Text>અંગે</Text>
         </View>
       </Page>
     </Document>

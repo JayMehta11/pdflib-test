@@ -12,17 +12,21 @@ const PdfMakeViewer = () => {
   }, []);
   const onCreate = async () => {
     const value = await PdfMakeGen(setPdf);
-    console.log('value', value);
+    // console.log('value', value);
     // setPdf(value);
   };
 
   return (
-    <>
-      <object data={pdf ?? ''} type='application/pdf' style={{ width: '80vw', minHeight: '90vh' }}>
+    <div style={{ display: 'flex', margin: 'auto', flexDirection: 'column', maxWidth: '80vw' }}>
+      <button onClick={onCreate}>pdfmake</button>
+      <object
+        data={pdf ?? ''}
+        type='application/pdf'
+        style={{ minWidth: '80vw', minHeight: '90vh' }}
+      >
         <p>unable to display file</p>
       </object>
-      <button onClick={onCreate}>Create pdfmake</button>
-    </>
+    </div>
   );
 };
 

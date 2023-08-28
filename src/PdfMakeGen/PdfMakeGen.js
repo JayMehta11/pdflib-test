@@ -8,6 +8,17 @@ export const PdfMakeGen = async (setPdf) => {
       normal:
         'https://fonts.gstatic.com/s/notoserifgujarati/v26/hESa6WBlOixO-3OJ1FTmTsmqlBRUJBVkcgNLpdsspzP2HuYycIzu.ttf',
     },
+    hindi: {
+      normal: 'https://fonts.gstatic.com/s/notosans/v28/o-0IIpQlx3QUlC5A4PNb4g.ttf',
+    },
+    telugu: {
+      normal:
+        'https://fonts.gstatic.com/s/notosanstelugu/v25/0FlxVOGZlE2Rrtr-HmgkMWJNjJ5_RyT8o8c7fHkeg-esVC5dzHkHIJQqrEntezbqQQ.ttf',
+    },
+    bengali: {
+      normal:
+        'https://fonts.gstatic.com/s/notoserifbengali/v19/hYkuPvggTvnzO14VSXltirUdnnkt1pwmWrprmO7RjE0a5BtdATYU1crFaM_5JfcAHnqn.ttf',
+    },
     Roboto: {
       normal:
         'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
@@ -18,12 +29,19 @@ export const PdfMakeGen = async (setPdf) => {
         'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf',
     },
   };
-  const docDefinition = {
-    content:
-      'એક સરકારી સંસ્થા, એજન્સી કે વિભાગ અન્ય સરકારી સંસ્થા, એજન્સી કે વિભાગ સાથે વાણિજયરહિત (non-commercial) સંદેશાવ્યવહાર કરે, તો તેને સરકારથી સરકાર (026) તરીકે ઓળખવામાં આવે છે. 1૧ ખર્ચાને ઘટાડવા, પ્રક્રિયાઓને સુનિયોજિત બનાવવા અને કાર્યાલયોને વધુ અસરકારક બનાવવા આ માહિતીનું વિવરણ મદદરૂપ બને છે. ઉપર વિવેચિત તમામ ઇ-કોમર્સ પ્રતિકૃતિઓમાં 820 અને 828 વિપુલ પ્રમાણમાં ઉપયોગમાં લેવામાં આવતી પ્રતિકૃતિઓ છે. આ બંને પ્રતિકૃતિમાં મુખ્ય તફાવત ગ્રાહક અંગે છે. B2B પ્રતિકૂતિમાં ગ્રાહક એક સંસ્થા છે, જ્યારે 20 પ્રતિકૃતિમાં ગ્રાહક એક સ્વતંત્ર વ્યક્તિ છે.',
-    defaultStyle: { font: 'gujarati' },
-  };
-  const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+  // const docDefinition = {
+  //   content: import.meta.env.VITE_GUJARATI_STRING,
+  //   defaultStyle: { font: 'gujarati' },
+  // };
+  const pdfDocGenerator = pdfMake.createPdf({
+    content: [
+      { text: import.meta.env.VITE_ENGLISH_STRING, style: { font: 'hindi', margin: [5, 2] } },
+      { text: import.meta.env.VITE_HINDI_STRING, style: { font: 'hindi', margin: [5, 2] } },
+      { text: import.meta.env.VITE_GUJARATI_STRING, style: { font: 'gujarati', margin: [5, 2] } },
+      { text: import.meta.env.VITE_BENGALI_STRING, style: { font: 'bengali', margin: [5, 2] } },
+      { text: import.meta.env.VITE_TELUGU_STRING, style: { font: 'telugu', margin: [5, 2] } },
+    ],
+  });
   pdfDocGenerator.getDataUrl((dataUrl) => {
     // const targetElement = document.querySelector('#iframeContainer');
     // const iframe = document.createElement('iframe');

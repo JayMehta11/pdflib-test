@@ -33,23 +33,23 @@ const PdfKitView = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', margin: 'auto', flexDirection: 'column', maxWidth: '80vw' }}>
+      <button onClick={onCreate}>pdfkit</button>
       <object
         type='application/pdf'
-        style={{ width: '80vw', minHeight: '90vh' }}
+        style={{ minWidth: '80vw', minHeight: '90vh' }}
         id='pdfDoc'
         data={pdf}
       >
         <p>unable to display file</p>
       </object>
-      <button onClick={onCreate}>Create a pdfkit</button>
-      <img
+      {/* <img
         id='tux'
         crossOrigin='anonymous'
         src='https://images.pexels.com/lib/api/pexels.png'
         style={{ display: 'none' }}
         alt='tux'
-      />
+      /> */}
     </div>
   );
 };

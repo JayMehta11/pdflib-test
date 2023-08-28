@@ -4,28 +4,52 @@ import { Template } from './Template';
 
 export const PdfMeGen = async (setPdf) => {
   const font = {
-    gujarati: {
-      data: await fetch(
-        'https://fonts.gstatic.com/s/notoserifgujarati/v26/hESa6WBlOixO-3OJ1FTmTsmqlBRUJBVkcgNLpdsspzP2HuYycIzu.ttf'
-      ).then((res) => res.arrayBuffer()),
-      //   fallback: true,
-    },
     hindi: {
       data: await fetch('https://fonts.gstatic.com/s/notosans/v28/o-0IIpQlx3QUlC5A4PNb4g.ttf').then(
         (res) => res.arrayBuffer()
       ),
       fallback: true,
     },
+    gujarati: {
+      data: await fetch(
+        'https://fonts.gstatic.com/s/notoserifgujarati/v26/hESa6WBlOixO-3OJ1FTmTsmqlBRUJBVkcgNLpdsspzP2HuYycIzu.ttf'
+      ).then((res) => res.arrayBuffer()),
+    },
+    chinese: {
+      data: await fetch(
+        'https://fonts.gstatic.com/s/notosanstc/v35/-nFuOG829Oofr2wohFbTp9ifNAn722rq0MXz76Cy_Co.ttf'
+      ).then((res) => res.arrayBuffer()),
+    },
+    bengali: {
+      data: await fetch(
+        'https://fonts.gstatic.com/s/notoserifbengali/v19/hYkuPvggTvnzO14VSXltirUdnnkt1pwmWrprmO7RjE0a5BtdATYU1crFaM_5JfcAHnqn.ttf'
+      ).then((res) => res.arrayBuffer()),
+    },
+    telugu: {
+      data: await fetch(
+        'https://fonts.gstatic.com/s/notoseriftelugu/v25/tDbl2pCbnkEKmXNVmt2M1q6f4HWbbj6MRbYEeav7Fe9D9TCwuQ.ttf'
+      ).then((res) => res.arrayBuffer()),
+      subset: false,
+    },
+    tamil: {
+      data: await fetch(
+        'https://fonts.gstatic.com/s/notosanstamil/v27/ieVc2YdFI3GCY6SyQy1KfStzYKZgzN1z4LKDbeZce-0429tBManUktuex7vGo70R.ttf'
+      ).then((res) => res.arrayBuffer()),
+    },
   };
+  // console.log('telugu', import.meta.env.VITE_TELUGU_STRING, font);
+
   const template = {
-    // skip...Check the Template section.
     ...Template,
   };
   const inputs = [
     {
-      a: 'એક સરકારી સંસ્થા, એજન્સી કે વિભાગ અન્ય સરકારી સંસ્થા, એજન્સી કે વિભાગ સાથે વાણિજયરહિત (non-commercial) સંદેશાવ્યવહાર કરે, તો તેને સરકારથી સરકાર (026) તરીકે ઓળખવામાં આવે છે. 1૧ ખર્ચાને ઘટાડવા, પ્રક્રિયાઓને સુનિયોજિત બનાવવા અને કાર્યાલયોને વધુ અસરકારક બનાવવા આ માહિતીનું વિવરણ મદદરૂપ બને છે.ઉપર વિવેચિત તમામ ઇ-કોમર્સ પ્રતિકૃતિઓમાં 820 અને 828 વિપુલ પ્રમાણમાં ઉપયોગમાં લેવામાં આવતી પ્રતિકૃતિઓ છે. આ બંને પ્રતિકૃતિમાં મુખ્ય તફાવત ગ્રાહક અંગે છે. B2B પ્રતિકૂતિમાં ગ્રાહક એક સંસ્થા છે, જ્યારે 20 પ્રતિકૃતિમાં ગ્રાહક એક સ્વતંત્ર વ્યક્તિ છે.',
-      b: 'कीसे बलवान परिवहन विचारशिलता विकेन्द्रित एवम् करता। उपलब्ध प्रसारन सार्वजनिक मुख्य पडता हुआआदी ',
-      c: 'जानकारी स्वतंत्र होसके उसके सभिसमज सम्पर्क Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets',
+      a: import.meta.env.VITE_ENGLISH_STRING,
+      b: import.meta.env.VITE_HINDI_STRING,
+      c: import.meta.env.VITE_GUJARATI_STRING,
+      d: import.meta.env.VITE_BENGALI_STRING,
+      // e: import.meta.env.VITE_TELUGU_STRING,
+      // f: import.meta.env.VITE_CHINESE_STRING,
     },
   ];
 

@@ -9,32 +9,52 @@ export const PdfKitGen = async (setPdf) => {
   const doc = new PDFDocument();
   const stream = doc.pipe(BlobStream());
   // console.log('hindi font', HindiFont);
-  const [hindiFont, gujaratiFont] = await Promise.all([
+  const [hindiFont, gujaratiFont, bengaliFont, teluguFont] = await Promise.all([
     fetch('https://fonts.gstatic.com/s/notosans/v28/o-0IIpQlx3QUlC5A4PNb4g.ttf'),
     fetch(
       'https://fonts.gstatic.com/s/notoserifgujarati/v26/hESa6WBlOixO-3OJ1FTmTsmqlBRUJBVkcgNLpdsspzP2HuYycIzu.ttf'
     ),
+    fetch(
+      'https://fonts.gstatic.com/s/notoserifbengali/v19/hYkuPvggTvnzO14VSXltirUdnnkt1pwmWrprmO7RjE0a5BtdATYU1crFaM_5JfcAHnqn.ttf'
+    ),
+    fetch(
+      'https://fonts.gstatic.com/s/notosanstelugu/v25/0FlxVOGZlE2Rrtr-HmgkMWJNjJ5_RyT8o8c7fHkeg-esVC5dzHkHIJQqrEntezbqQQ.ttf'
+    ),
   ]);
   const hindiArrayBuffer = await hindiFont.arrayBuffer();
-  const gujaratirrayBuffer = await gujaratiFont.arrayBuffer();
+  const gujaratiArrayBuffer = await gujaratiFont.arrayBuffer();
+  const bengaliArrayBuffer = await bengaliFont.arrayBuffer();
+  const teluguArrayBuffer = await teluguFont.arrayBuffer();
   // console.log('font array buffer', { font, arrayBuffer });
   doc.registerFont('NotoSansDevanagari-Regular', hindiArrayBuffer);
-  doc.registerFont('NotoSansGujarati-Regular', gujaratirrayBuffer);
+  doc.registerFont('NotoSansGujarati-Regular', gujaratiArrayBuffer);
+  doc.registerFont('NotoSerifBengali-Regular', bengaliArrayBuffer);
+  doc.registerFont('NotoSansTelugu-Regular', teluguArrayBuffer);
 
   doc.font('NotoSansDevanagari-Regular');
-  doc.text('some text परीक्षा');
+  doc.text(import.meta.env.VITE_ENGLISH_STRING);
+  doc.moveDown();
+  doc.text(import.meta.env.VITE_HINDI_STRING);
   doc.moveDown();
   // doc.pipe(fs.createWriteStream('output.pdf'));
 
   doc.font('NotoSansGujarati-Regular');
-  doc.text(
-    ' એક સરકારી સંસ્થા, એજન્સી કે વિભાગ અન્ય સરકારી સંસ્થા, એજન્સી કે વિભાગ સાથે વાણિજયરહિત (non-commercial) સંદેશાવ્યવહાર કરે, તો તેને સરકારથી સરકાર (026) તરીકે ઓળખવામાં આવે છે. 1૧ ખર્ચાને ઘટાડવા, પ્રક્રિયાઓને સુનિયોજિત બનાવવા અને કાર્યાલયોને વધુ અસરકાર '
-  );
-  doc.image(getBase64Image('tux'), 0, 15, { width: 300 }).text('Proportional to width', 0, 0);
+  doc.text(import.meta.env.VITE_GUJARATI_STRING);
+  doc.moveDown();
+
+  doc.font('NotoSerifBengali-Regular');
+  doc.text(import.meta.env.VITE_BENGALI_STRING);
+  doc.moveDown();
+
+  doc.font('NotoSansTelugu-Regular');
+  doc.text(import.meta.env.VITE_TELUGU_STRING);
+  doc.moveDown();
+
+  // doc.image(getBase64Image('tux'), 0, 15, { width: 300 }).text('Proportional to width', 0, 0);
   // const val3 = await readAsDataUri(doc);
   // setPdf(val3);
-  let buffers = [];
-  doc.on('data', function (result) {
+  // let buffers = [];
+  doc.on('data', function () {
     // console.log('result', result);
     // buffers.push.bind(result.buffer);
     // const blob = new Blob([result], { type: 'application/pdf' });
@@ -88,17 +108,17 @@ export async function readAsArrayBuffer(file) {
   });
 }
 
-function getBase64Image(img_id) {
-  // Create an empty canvas element
-  const img = document.getElementById(img_id);
-  var canvas = document.createElement('canvas');
-  canvas.width = img.width;
-  canvas.height = img.height;
-  // Copy the image contents to the canvas
-  var ctx = canvas.getContext('2d');
-  ctx.globalAlpha = 0.4;
-  ctx.drawImage(img, 0, 0);
-  // Get the data-URL formatted image
-  var dataURL = canvas.toDataURL('image/png');
-  return dataURL;
-}
+// function getBase64Image(img_id) {
+//   // Create an empty canvas element
+//   const img = document.getElementById(img_id);
+//   var canvas = document.createElement('canvas');
+//   canvas.width = img.width;
+//   canvas.height = img.height;
+//   // Copy the image contents to the canvas
+//   var ctx = canvas.getContext('2d');
+//   ctx.globalAlpha = 0.4;
+//   ctx.drawImage(img, 0, 0);
+//   // Get the data-URL formatted image
+//   var dataURL = canvas.toDataURL('image/png');
+//   return dataURL;
+// }
