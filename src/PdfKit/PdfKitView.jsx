@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-import { PdfKitGen } from './PdfKitGen';
+import { PdfKitGenOMR } from './PdfKitGenOMR';
 
 const PdfKitView = () => {
   const [pdf, setPdf] = useState('');
@@ -12,7 +12,7 @@ const PdfKitView = () => {
   }, []);
 
   const onCreate = async () => {
-    const value = await PdfKitGen(setPdf);
+    const value = await PdfKitGenOMR(setPdf);
     console.log('value', value);
     // setPdf(value);
   };
