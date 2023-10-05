@@ -16,69 +16,207 @@ const header = async (doc) => {
   doc.font('Helvetica').fontSize(14);
 
   doc.text('Question', 55, 20, { align: 'left' });
-  doc.text('50', 55, 40, { align: 'left' });
+  doc.text('90', 55, 40, { align: 'left' });
 
   doc.fontSize(16);
   // Name
-  doc.text('Name:', 50, 110);
-  doc.rect(110, 105, 180, 25).lineWidth(2).stroke(); // Draw a box for Name
+  doc.text('Name:', 50, 80);
+  doc.rect(110, 75, 180, 25).lineWidth(2).stroke(); // Draw a box for Name
 
   // ID
-  doc.text('ID:', 330, 110);
-  doc.rect(390, 105, 150, 25).lineWidth(2).stroke(); // Draw a box for ID
-
+  doc.text('ID:', 330, 80);
+  doc.rect(390, 75, 150, 25).lineWidth(2).stroke(); // Draw a box for ID
+  
 };
 
+const questionsTotal=90;
 
 const body = async(doc) => {
-  doc.moveTo(185, 175).lineTo(185, 770).lineWidth(2).dash(3,{space:5}).stroke();
-  doc.moveTo(377, 175).lineTo(377, 770).lineWidth(2).dash(3,{space:5}).stroke();
 
-  doc.undash();
-  
-    const startX1 = 30;
-    const startX2 = 220;
-    const startX3 = 410;
+  if(questionsTotal>40){
+    doc.moveTo(185, 125).lineTo(185, 785).lineWidth(2).dash(3,{space:5}).stroke();
+    doc.moveTo(377, 125).lineTo(377, 785).lineWidth(2).dash(3,{space:5}).stroke();
+
+    doc.undash();
+    
+      const startX1 = 30;
+      const startX2 = 220;
+      const startX3 = 410;
+
+      let startY = 140;    
+      let currentY = startY + 20;
+
+       const metadata = [];
+      const circles = [];
+
+      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+        
+        let currentX = startX1;
+        if(qNum<61 && qNum>30){
+          currentX = startX2;
+        }
+        else if(qNum>60){
+          currentX = startX3;
+        }
+      
+        if(qNum===1 || qNum===31 || qNum===61){
+          doc.font('Helvetica-Bold');
+          currentY = startY+20;
+          doc.text('A',currentX+35,currentY-30).stroke();
+          doc.text('B',currentX+60,currentY-30).stroke();
+          doc.text('C',currentX+85,currentY-30).stroke();
+          doc.text('D',currentX+110,currentY-30).stroke();
+          doc.font('Helvetica');
+        }
+
+        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY-3);
+        doc.lineWidth(1);
+        circles.push({ x: currentX + 40, y: currentY+3, r: 6 });
+        circles.push({ x: currentX + 65, y: currentY+3, r: 6 });
+        circles.push({ x: currentX + 90, y: currentY+3, r: 6 });
+        circles.push({ x: currentX + 115, y: currentY+3, r: 6 });
+        
+        currentY += 21;
+        const cryptID = crypto.randomUUID();
+        const object = {
+          "item": `${qNum}`,
+          "ans": ["D"],
+          "modelType": "mathpix",
+          "contentType": "question",
+          "contentSubType": "OMR",
+          "maxScore": 1,
+          "difficulty": 50,
+          "skills": [],
+          "qBox": [],
+          "ansBox":[
+            {
+              "x": currentX + 33,
+              "y": currentY - 4,
+              "h": 14,
+              "w": 14,
+              "boxType": "answer",
+              "id": "3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5"
+            },
+            {
+              "x": currentX + 58,
+              "y": currentY - 4,
+              "h": 14,
+              "w": 14,
+              "boxType": "answer",
+              "id": "83fb375d-eba7-4027-b897-33577b143724"
+            },
+            {
+              "x": currentX + 83,
+              "y": currentY - 4,
+              "h": 14,
+              "w": 14,
+              "boxType": "answer",
+              "id": "0d978f88-3f8a-4e32-a066-a6567022abd1"
+            },
+            {
+              "x": currentX + 108,
+              "y": currentY - 4,
+              "h": 14,
+              "w": 14,
+              "boxType": "answer",
+              "id": "846811b1-ed46-468e-acac-845647b719ab"
+            }
+          ],
+          "id": cryptID,
+          "orientation": "ltr",
+          "rubric": "",
+          "question": "",
+          "language": "english"
+        }
+        metadata.push(object);
+      }
+      for (const circle of circles) {
+        doc.circle(circle.x, circle.y, circle.r).stroke();
+      }
+
+      console.log(metadata);
+    }
+  else if(questionsTotal<41 && questionsTotal>20){
+    doc.moveTo(300, 175).lineTo(300, 770).lineWidth(2).dash(3,{space:5}).stroke();
+    doc.undash();
+    const startX1 = 60;
+    const startX2 = 350;
 
     let startY = 200;    
-    let currentY = startY + 20;
+      let currentY = startY + 20;
 
-    let questionsPerColumn=50;
 
-    const circles = [];
+      const circles = [];
 
-    for (let qNum = 1; qNum <= questionsPerColumn; qNum++) {
+      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+        
+        let currentX = startX1;
+        if(qNum<41 && qNum>20){
+          currentX = startX2;
+        }
       
-      let currentX = startX1;
-      if(qNum<41 && qNum>20){
-        currentX = startX2;
+        if(qNum===1 || qNum===21 || qNum===41){
+          doc.font('Helvetica-Bold');
+          currentY = startY+20;
+          doc.text('A',currentX+35,currentY-30).stroke();
+          doc.text('B',currentX+60,currentY-30).stroke();
+          doc.text('C',currentX+85,currentY-30).stroke();
+          doc.text('D',currentX+110,currentY-30).stroke();
+          doc.font('Helvetica');
+        }
+
+        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
+        doc.lineWidth(1);
+        circles.push({ x: currentX + 40, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 65, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 90, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 115, y: currentY+7, r: 6 });
+        
+        currentY += 27;
       }
-      else if(qNum>40){
-        currentX = startX3;
-      }
-     
-      if(qNum===1 || qNum===21 || qNum===41){
-        doc.font('Helvetica-Bold');
-        currentY = startY+20;
-        doc.text('A',currentX+35,currentY-30).stroke();
-        doc.text('B',currentX+60,currentY-30).stroke();
-        doc.text('C',currentX+85,currentY-30).stroke();
-        doc.text('D',currentX+110,currentY-30).stroke();
-        doc.font('Helvetica');
+      for (const circle of circles) {
+        doc.circle(circle.x, circle.y, circle.r).stroke();
       }
 
-      doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
-      doc.font('Helvetica');
-      circles.push({ x: currentX + 40, y: currentY+7, r: 6 });
-      circles.push({ x: currentX + 65, y: currentY+7, r: 6 });
-      circles.push({ x: currentX + 90, y: currentY+7, r: 6 });
-      circles.push({ x: currentX + 115, y: currentY+7, r: 6 });
+  }
+  else{
+    doc.undash();
+    const startX1 = 220;
+
+    let startY = 200;    
+      let currentY = startY + 20;
+
+
+      const circles = [];
+
+      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+        
+        let currentX = startX1;
       
-      currentY += 27;
-    }
-    for (const circle of circles) {
-      doc.circle(circle.x, circle.y, circle.r).stroke();
-    }
+        if(qNum===1 || qNum===21 || qNum===41){
+          doc.font('Helvetica-Bold');
+          currentY = startY+20;
+          doc.text('A',currentX+35,currentY-30).stroke();
+          doc.text('B',currentX+60,currentY-30).stroke();
+          doc.text('C',currentX+85,currentY-30).stroke();
+          doc.text('D',currentX+110,currentY-30).stroke();
+          doc.font('Helvetica');
+        }
+
+        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
+        doc.lineWidth(1);
+        circles.push({ x: currentX + 40, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 65, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 90, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 115, y: currentY+7, r: 6 });
+        
+        currentY += 27;
+      }
+      for (const circle of circles) {
+        doc.circle(circle.x, circle.y, circle.r).stroke();
+      }
+
+  }
     // }
 
     // jsonData.forEach((item, index) => {
@@ -123,7 +261,7 @@ async function imageToBase64(url) {
 }
 
 const footer = async(doc) => {
-  doc.moveTo(0, 780).lineTo(615, 780).lineWidth(2).dash(3,{space:5}).stroke();
+  doc.moveTo(0, 790).lineTo(615, 790).lineWidth(2).dash(3,{space:5}).stroke();
 
   // const imagePath = 'https://images.pexels.com/lib/api/pexels.png';
   // const base64url = await imageToBase64(imagePath);
@@ -163,9 +301,9 @@ export const PdfKitGenOMR = async (setPdf) => {
   await header(doc); 
 
   // doc.moveDown();
-  doc.moveTo(0, 165).lineTo(615, 165).lineWidth(2).dash(3,{space:5}).stroke();
+  doc.moveTo(0, 120).lineTo(615, 120).lineWidth(2).dash(3,{space:5}).stroke();
   // doc.pipe(fs.createWriteStream('output.pdf'));
-
+  
   await body(doc);
   // doc.underline(0,700,615,700);
   // doc.moveTo(30, 600).lineTo(515, 600).lineWidth(2);
