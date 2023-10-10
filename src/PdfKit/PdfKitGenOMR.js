@@ -29,11 +29,14 @@ const header = async (doc) => {
   
 };
 
-const questionsTotal=90;
+const questionsTotal=60;
+const circles = [];
+// const rectangles =[]
 
 const body = async(doc) => {
 
-  if(questionsTotal>40){
+  const metadata = [];
+  if(questionsTotal>60){
     doc.moveTo(185, 125).lineTo(185, 785).lineWidth(2).dash(3,{space:5}).stroke();
     doc.moveTo(377, 125).lineTo(377, 785).lineWidth(2).dash(3,{space:5}).stroke();
 
@@ -46,8 +49,6 @@ const body = async(doc) => {
       let startY = 140;    
       let currentY = startY + 20;
 
-       const metadata = [];
-      const circles = [];
 
       for (let qNum = 1; qNum <= questionsTotal; qNum++) {
         
@@ -75,8 +76,7 @@ const body = async(doc) => {
         circles.push({ x: currentX + 65, y: currentY+3, r: 6 });
         circles.push({ x: currentX + 90, y: currentY+3, r: 6 });
         circles.push({ x: currentX + 115, y: currentY+3, r: 6 });
-        
-        currentY += 21;
+
         const cryptID = crypto.randomUUID();
         const object = {
           "item": `${qNum}`,
@@ -128,14 +128,132 @@ const body = async(doc) => {
           "question": "",
           "language": "english"
         }
+
         metadata.push(object);
+        currentY += 21;
+        
       }
       for (const circle of circles) {
         doc.circle(circle.x, circle.y, circle.r).stroke();
       }
+      
 
       console.log(metadata);
     }
+  else if(questionsTotal<61 && questionsTotal>40){
+    doc.moveTo(185, 125).lineTo(185, 785).lineWidth(2).dash(3,{space:5}).stroke();
+    doc.moveTo(377, 125).lineTo(377, 785).lineWidth(2).dash(3,{space:5}).stroke();
+
+    doc.undash();
+    
+      const startX1 = 30;
+      const startX2 = 220;
+      const startX3 = 410;
+
+    let startY = 200;    
+      let currentY = startY + 20;
+
+
+      const circles = [];
+      // const rectangles = [];
+      
+
+      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+        
+        let currentX = startX1;
+        if(qNum<41 && qNum>20){
+          currentX = startX2;
+        }else if(qNum>40){
+          currentX = startX3
+        }
+      
+        if(qNum===1 || qNum===21 || qNum===41){
+          doc.font('Helvetica-Bold');
+          currentY = startY+20;
+          doc.text('A',currentX+35,currentY-30).stroke();
+          doc.text('B',currentX+60,currentY-30).stroke();
+          doc.text('C',currentX+85,currentY-30).stroke();
+          doc.text('D',currentX+110,currentY-30).stroke();
+          doc.font('Helvetica');
+        }
+
+        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
+        doc.lineWidth(1);
+        circles.push({ x: currentX + 40, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 65, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 90, y: currentY+7, r: 6 });
+        circles.push({ x: currentX + 115, y: currentY+7, r: 6 });
+        
+        
+        const cryptID = crypto.randomUUID();
+                
+        // rectangles.push({ x: currentX - 7 + 40, y: currentY, w: 14 , h: 14});
+        // rectangles.push({ x: currentX - 7 + 65, y: currentY, w: 14 , h: 14});
+        // rectangles.push({ x: currentX - 7 + 90, y: currentY, w: 14 , h: 14});
+        // rectangles.push({ x: currentX - 7 + 115, y: currentY, w: 14 , h: 14 });
+
+        const object = {
+          "item": `${qNum}`,
+          "ans": ["D"],
+          "modelType": "mathpix",
+          "contentType": "question",
+          "contentSubType": "OMR",
+          "maxScore": 1,
+          "difficulty": 50,
+          "skills": [],
+          "qBox": [],
+          "ansBox":[
+            {
+              "x": currentX + 33,
+              "y": currentY - 4,
+              "h": 14,
+              "w": 14,
+              "boxType": "answer",
+              "id": "3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5"
+            },
+            {
+              "x": currentX + 58,
+              "y": currentY - 4,
+              "h": 14,
+              "w": 14,
+              "boxType": "answer",
+              "id": "83fb375d-eba7-4027-b897-33577b143724"
+            },
+            {
+              "x": currentX + 83,
+              "y": currentY - 4,
+              "h": 14,
+              "w": 14,
+              "boxType": "answer",
+              "id": "0d978f88-3f8a-4e32-a066-a6567022abd1"
+            },
+            {
+              "x": currentX + 108,
+              "y": currentY - 4,
+              "h": 14,
+              "w": 14,
+              "boxType": "answer",
+              "id": "846811b1-ed46-468e-acac-845647b719ab"
+            }
+          ],
+          "id": cryptID,
+          "orientation": "ltr",
+          "rubric": "",
+          "question": "",
+          "language": "english"
+        }
+
+        metadata.push(object);
+        currentY += 27;
+      }
+      for (const circle of circles) {
+        doc.circle(circle.x, circle.y, circle.r).stroke();
+      }
+      // for (const circle of circles) {
+      //   doc.rect(circle.x - 7, circle.y - 7, 14,14).stroke();
+      // }
+
+  }  
   else if(questionsTotal<41 && questionsTotal>20){
     doc.moveTo(300, 175).lineTo(300, 770).lineWidth(2).dash(3,{space:5}).stroke();
     doc.undash();
@@ -216,30 +334,7 @@ const body = async(doc) => {
         doc.circle(circle.x, circle.y, circle.r).stroke();
       }
 
-  }
-    // }
-
-    // jsonData.forEach((item, index) => {
-    //   const { question, answer } = item;
-    //   let currentX;
-    //   if (index % 2 === 0) {
-    //     currentY += 50;
-    //     currentX = startX1;
-    //   } else {
-    //     currentX = startX2;
-    //   }
-    //   doc.fillColor("grey");
-    //   doc.text(`प्रश्न ${index + 1}:`, currentX, currentY);
-    //   doc.fillColor("black");
-    //   doc.text(question, currentX + 50, currentY).stroke();
-  
-    //   const answerX = currentX + 130;
-    //   doc.rect(answerX, currentY, 100, 32).lineWidth(1).stroke();
-    //   doc.text(answer, answerX + 2, currentY);
-  
-    //   startY += 50;
-    // });
-    // doc.moveTo(30, 600).lineTo(515, 600).lineWidth(2);
+  }  
 }
 
 
