@@ -13,7 +13,7 @@ const PdfKitView = () => {
 
   const onCreate = async () => {
     const value = await PdfKitGenOMR(setPdf);
-    console.log('value', value);
+    // console.log('value', value);
     // setPdf(value);
   };
 
