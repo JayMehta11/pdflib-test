@@ -54,3 +54,98 @@ export const dataURLtoFile = (dataurl) => {
   }
   return new File([u8arr], `${crypto.randomUUID()}.png`, { type: mime });
 };
+
+// generateImage(pageImg, base64Image => {
+//   const img = new Image();
+//   img.crossOrigin = 'anonymous';
+//   img.onload = function () {
+//     console.log(
+//       'changed ht, wt',
+//       img.naturalHeight,
+//       img.naturalWidth
+//       // Math.ceil(this.naturalHeight / factor),
+//       // Math.ceil(this.naturalWidth / factor)
+//     );
+//     if (this.naturalHeight > FIXED_HT || this.naturalWidth > FIXED_HT) {
+//       let factor;
+//       if (this.naturalHeight > this.naturalWidth) {
+//         factor = this.naturalHeight / FIXED_HT;
+//       } else factor = this.naturalWidth / FIXED_HT;
+
+//       setState(prevState => ({
+//         ...prevState,
+//         gridHeight: Math.ceil(this.naturalHeight / factor),
+//         gridWidth: Math.ceil(this.naturalWidth / factor)
+//       }));
+//     } else {
+//       // console.log(
+//       //   'default ht and wt',
+//       //   Math.ceil(this.naturalHeight),
+//       //   Math.ceil(this.naturalWidth)
+//       // );
+//       setState(prevState => ({
+//         ...prevState,
+//         gridHeight: Math.ceil(this.naturalHeight),
+//         gridWidth: Math.ceil(this.naturalWidth)
+//       }));
+//     }
+//   };
+//   img.src = base64Image;
+//   // setState(prevState => ({ ...prevState, base64Image }));
+//   // console.log('img', img);
+//   setState(prevState => ({
+//     ...prevState,
+//     book: book,
+//     bookType: book?.bookType ?? 'undefined',
+//     author: user,
+//     bookId: splitPage.bookId, //can be obtained from book
+//     pageNumber: splitPage.pageNumber, //can be obtained from api
+//     pageId: splitPage.pageId, // can be obtained from api
+//     // src: pageImg,
+//     file: img
+//   }));
+// });
+
+// if (this.naturalHeight > FIXED_HT || this.naturalWidth > FIXED_HT) {
+//   let factor;
+//   if (this.naturalHeight > this.naturalWidth) {
+//     factor = this.naturalHeight / FIXED_HT;
+//   } else 
+//   factor = this.naturalWidth / FIXED_HT;
+//   console.log(factor,"factor");
+//   resolve(
+//     factorizeCoordinates({
+//       data: metaData,
+//       imageHeight: imgNew.height/factor,
+//       imageWidth: imgNew.width/factor,
+//       tileHeight: tileHeight,
+//       tileWidth: tileWidth,
+//     })
+//     );
+
+//   // setState(prevState => ({
+//   //   ...prevState,
+//   //   gridHeight: Math.ceil(this.naturalHeight / factor),
+//   //   gridWidth: Math.ceil(this.naturalWidth / factor)
+//   // }));
+// } else {
+//   resolve(
+//     factorizeCoordinates({
+//       data: metaData,
+//       imageHeight: imgNew.height,
+//       imageWidth: imgNew.width,
+//       tileHeight: tileHeight,
+//       tileWidth: tileWidth,
+//     })
+//     );
+//   // console.log(
+//   //   'default ht and wt',
+//   //   Math.ceil(this.naturalHeight),
+//   //   Math.ceil(this.naturalWidth)
+//   // );
+//   // setState(prevState => ({
+//   //   ...prevState,
+//   //   gridHeight: Math.ceil(this.naturalHeight),
+//   //   gridWidth: Math.ceil(this.naturalWidth)
+//   // }));
+// }

@@ -38,6 +38,10 @@ const circles = [];
 
 const body = async (doc) => {
   const metadata = [];
+
+  // const width = 1.3892621959414058;
+  // const hgt = 1.3897302497951038;
+
   if (questionsTotal > 60) {
     doc.moveTo(185, 125).lineTo(185, 785).lineWidth(2).dash(3, { space: 5 }).stroke();
     doc.moveTo(377, 125).lineTo(377, 785).lineWidth(2).dash(3, { space: 5 }).stroke();
@@ -91,32 +95,32 @@ const body = async (doc) => {
           {
             x: currentX + 33,
             y: currentY - 4,
-            h: 14,
-            w: 14,
+            h: 17,
+            w: 17,
             boxType: 'answer',
             id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5',
           },
           {
             x: currentX + 58,
             y: currentY - 4,
-            h: 14,
-            w: 14,
+            h: 17,
+            w: 17,
             boxType: 'answer',
             id: '83fb375d-eba7-4027-b897-33577b143724',
           },
           {
             x: currentX + 83,
             y: currentY - 4,
-            h: 14,
-            w: 14,
+            h: 17,
+            w: 17,
             boxType: 'answer',
             id: '0d978f88-3f8a-4e32-a066-a6567022abd1',
           },
           {
             x: currentX + 108,
             y: currentY - 4,
-            h: 14,
-            w: 14,
+            h: 17,
+            w: 17,
             boxType: 'answer',
             id: '846811b1-ed46-468e-acac-845647b719ab',
           },
@@ -134,9 +138,6 @@ const body = async (doc) => {
     for (const circle of circles) {
       doc.circle(circle.x, circle.y, circle.r).stroke();
     }
-
-    console.log('metadata', metadata);
-    return metadata;
   } else if (questionsTotal < 61 && questionsTotal > 40) {
     doc.moveTo(185, 125).lineTo(185, 785).lineWidth(2).dash(3, { space: 5 }).stroke();
     doc.moveTo(377, 125).lineTo(377, 785).lineWidth(2).dash(3, { space: 5 }).stroke();
@@ -179,12 +180,6 @@ const body = async (doc) => {
       circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
 
       const cryptID = crypto.randomUUID();
-
-      // rectangles.push({ x: currentX - 7 + 40, y: currentY, w: 14 , h: 14});
-      // rectangles.push({ x: currentX - 7 + 65, y: currentY, w: 14 , h: 14});
-      // rectangles.push({ x: currentX - 7 + 90, y: currentY, w: 14 , h: 14});
-      // rectangles.push({ x: currentX - 7 + 115, y: currentY, w: 14 , h: 14 });
-
       const object = {
         item: `${qNum}`,
         ans: ['D'],
@@ -242,9 +237,7 @@ const body = async (doc) => {
     for (const circle of circles) {
       doc.circle(circle.x, circle.y, circle.r).stroke();
     }
-    // for (const circle of circles) {
-    //   doc.rect(circle.x - 7, circle.y - 7, 14,14).stroke();
-    // }
+
   } else if (questionsTotal < 41 && questionsTotal > 20) {
     doc.moveTo(300, 175).lineTo(300, 770).lineWidth(2).dash(3, { space: 5 }).stroke();
     doc.undash();
@@ -279,6 +272,59 @@ const body = async (doc) => {
       circles.push({ x: currentX + 90, y: currentY + 7, r: 6 });
       circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
 
+      const cryptID = crypto.randomUUID();
+      const object = {
+        item: `${qNum}`,
+        ans: ['D'],
+        modelType: 'mathpix',
+        contentType: 'question',
+        contentSubType: 'OMR',
+        maxScore: 1,
+        difficulty: 50,
+        skills: [],
+        qBox: [],
+        ansBox: [
+          {
+            x: currentX + 33,
+            y: currentY - 4,
+            h: 14,
+            w: 14,
+            boxType: 'answer',
+            id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5',
+          },
+          {
+            x: currentX + 58,
+            y: currentY - 4,
+            h: 14,
+            w: 14,
+            boxType: 'answer',
+            id: '83fb375d-eba7-4027-b897-33577b143724',
+          },
+          {
+            x: currentX + 83,
+            y: currentY - 4,
+            h: 14,
+            w: 14,
+            boxType: 'answer',
+            id: '0d978f88-3f8a-4e32-a066-a6567022abd1',
+          },
+          {
+            x: currentX + 108,
+            y: currentY - 4,
+            h: 14,
+            w: 14,
+            boxType: 'answer',
+            id: '846811b1-ed46-468e-acac-845647b719ab',
+          },
+        ],
+        id: cryptID,
+        orientation: 'ltr',
+        rubric: '',
+        question: '',
+        language: 'english',
+      };
+
+      metadata.push(object);
       currentY += 27;
     }
     for (const circle of circles) {
@@ -313,12 +359,66 @@ const body = async (doc) => {
       circles.push({ x: currentX + 90, y: currentY + 7, r: 6 });
       circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
 
+      const cryptID = crypto.randomUUID();
+      const object = {
+        item: `${qNum}`,
+        ans: ['D'],
+        modelType: 'mathpix',
+        contentType: 'question',
+        contentSubType: 'OMR',
+        maxScore: 1,
+        difficulty: 50,
+        skills: [],
+        qBox: [],
+        ansBox: [
+          {
+            x: currentX + 33,
+            y: currentY - 4,
+            h: 14,
+            w: 14,
+            boxType: 'answer',
+            id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5',
+          },
+          {
+            x: currentX + 58,
+            y: currentY - 4,
+            h: 14,
+            w: 14,
+            boxType: 'answer',
+            id: '83fb375d-eba7-4027-b897-33577b143724',
+          },
+          {
+            x: currentX + 83,
+            y: currentY - 4,
+            h: 14,
+            w: 14,
+            boxType: 'answer',
+            id: '0d978f88-3f8a-4e32-a066-a6567022abd1',
+          },
+          {
+            x: currentX + 108,
+            y: currentY - 4,
+            h: 14,
+            w: 14,
+            boxType: 'answer',
+            id: '846811b1-ed46-468e-acac-845647b719ab',
+          },
+        ],
+        id: cryptID,
+        orientation: 'ltr',
+        rubric: '',
+        question: '',
+        language: 'english',
+      };
+
+      metadata.push(object);
       currentY += 27;
     }
     for (const circle of circles) {
       doc.circle(circle.x, circle.y, circle.r).stroke();
     }
   }
+  return metadata;
 };
 
 async function imageToBase64(url) {
@@ -379,21 +479,10 @@ export const PdfKitGenOMR = async (setPdf) => {
 
   await header(doc);
 
-  // doc.moveDown();
   doc.moveTo(0, 120).lineTo(615, 120).lineWidth(2).dash(3, { space: 5 }).stroke();
-  // doc.pipe(fs.createWriteStream('output.pdf'));
   const metaData = await body(doc);
-  console.log('metaData', metaData);
-  // doc.underline(0,700,615,700);
-  // doc.moveTo(30, 600).lineTo(515, 600).lineWidth(2);
 
   await footer(doc);
-
-  // doc.font('NotoSansGujarati-Regular');
-  // doc.text(
-  //   ' એક સરકારી સંસ્થા, એજન્સી કે વિભાગ અન્ય સરકારી સંસ્થા, એજન્સી કે વિભાગ સાથે વાણિજયરહિત (non-commercial) સંદેશાવ્યવહાર કરે, તો તેને સરકારથી સરકાર (026) તરીકે ઓળખવામાં આવે છે. 1૧ ખર્ચાને ઘટાડવા, પ્રક્રિયાઓને સુનિયોજિત બનાવવા અને કાર્યાલયોને વધુ અસરકાર '
-  // );
-  // doc.end();
 
   stream.on('finish', async function () {
     const blobUrl = stream.toBlob('application/pdf');
@@ -401,81 +490,105 @@ export const PdfKitGenOMR = async (setPdf) => {
     setPdf(val3);
     const file = await base64ToFile(val3, 'randomname.pdf', 'application/pdf');
     const imageObj = await PDFtoPNG([file], 200 / 96);
-    console.log('image obj', imageObj);
+    // console.log('image obj', imageObj);
     const blob = URL.createObjectURL(imageObj[0]);
     const imgNew = new Image();
     imgNew.src = blob;
+    const tileHeight = doc.page.height;
+    const tileWidth = doc.page.width;
+    const FIXED_HT = 1280;
+    // console.log(tileHeight,tileWidth,'blob');
     const coords = new Promise((resolve, reject) => {
-      imgNew.onload = () => {
-        resolve(
-          factorizeCoordinates({
-            data: metaData,
-            imageHeight: imgNew.height,
-            imageWidth: imgNew.width,
-            tileHeight: blobUrl.tileHeight,
-            tileWidth: blobUrl.tileWidth,
-          })
-        );
+      imgNew.onload = (prop) => {
+        console.log("test",imgNew.height,prop.naturalHeight);
+        if (imgNew.height > FIXED_HT || imgNew.width > FIXED_HT) {
+          let factor;
+          if (imgNew.height > imgNew.width) {
+            factor = imgNew.height / FIXED_HT;
+          } else 
+          {
+            factor = imgNew.width / FIXED_HT;
+          }
+          
+          console.log(factor,"factor",imgNew.height/factor,imgNew.width/factor);
+          resolve(
+            factorizeCoordinates({
+              data: metaData,
+              imageHeight: imgNew.height/factor,
+              imageWidth: imgNew.width/factor,
+              tileHeight: tileHeight,
+              tileWidth: tileWidth,
+            })
+            );
+        
+          // setState(prevState => ({
+          //   ...prevState,
+          //   gridHeight: Math.ceil(this.naturalHeight / factor),
+          //   gridWidth: Math.ceil(this.naturalWidth / factor)
+          // }));
+        } else {
+          resolve(
+            factorizeCoordinates({
+              data: metaData,
+              imageHeight: imgNew.height,
+              imageWidth: imgNew.width,
+              tileHeight: tileHeight,
+              tileWidth: tileWidth,
+            })
+            );
+          // console.log(
+          //   'default ht and wt',
+          //   Math.ceil(this.naturalHeight),
+          //   Math.ceil(this.naturalWidth)
+          // );
+          // setState(prevState => ({
+          //   ...prevState,
+          //   gridHeight: Math.ceil(this.naturalHeight),
+          //   gridWidth: Math.ceil(this.naturalWidth)
+          // }));
+        }
+          console.log(imgNew.height,imgNew.width,'image');
       };
+      
       imgNew.onerror = (error) => {
         reject(error);
       };
     });
     console.log('facorized coords', coords);
   });
-  // const blobUrlPromise = new Promise((resolve, reject) => {
-  //   stream.on("finish", async function () {
-  //     const blobUrl = stream.toBlob("application/pdf");
-  //     const val3 = await readAsDataUri(blobUrl);
-  //     resolve(val3);
-  //     setPdf(val3);
-  //     const file = await base64ToFile(
-  //       blobUrl,
-  //       "randomname.pdf",
-  //       "application/pdf"
-  //     );
-  //     const imageObj = await PDFtoPNG([file], 200 / 96);
-  //     console.log('image obj', imageObj);
-  //     const blob = URL.createObjectURL(imageObj[0]);
-  //     const imgNew = new Image();
-  //     imgNew.src = blob;
-  //     imgNew.onload = () => {
-  //       factorizeCoordinates({
-  //         imageHeight: imgNew.height,
-  //         imageWidth: imgNew.width,
-  //         tileHeight: blobUrl.tileHeight,
-  //         tileWidth: blobUrl.tileWidth,
-  //       });
-  //     };
-  //     console.log("")
-  //   });
-  //   stream.on("error", function (error) {
-  //     reject(error);
-  //   });
-  // });
+
   doc.end();
-  // const blobUrl = await blobUrlPromise;
-  // return {
-  //   blobUrl,
-  // };
 };
+
 const factorizeCoordinates = ({ data, imageHeight, imageWidth, tileHeight, tileWidth }) => {
-  console.log('data', data);
+  // console.log('data', data);
+
+  if (!Array.isArray(data)) {
+    console.error('Data is not an array');
+    return [];
+  }
+
   const widthFactor = imageWidth / tileWidth;
   const heightFactor = imageHeight / tileHeight;
-  const temp = [...data];
-  for (const item of temp) {
-    for (const subArray of item) {
-      for (const subItem of subArray.ansBox) {
-        subItem.x = Math.round(subItem.x * widthFactor);
-        subItem.y = Math.round(subItem.y * heightFactor);
-        subItem.w = Math.round(subItem.w * widthFactor);
-        subItem.h = Math.round(subItem.h * heightFactor);
+  const result = [];
+  console.log(widthFactor,heightFactor);
+  for (const subItem of data) {
+    if (typeof subItem === 'object') {
+      // console.log('Processing subItem', subItem);
+      const processedItem = { ...subItem };
+      for(const fact of processedItem.ansBox){
+        fact.x = Math.round(fact.x * widthFactor);
+        fact.y = Math.round(fact.y * heightFactor);
+        fact.w = Math.round(fact.w);
+        fact.h = Math.round(fact.h);
       }
+      result.push(processedItem);
+    } else {
+      console.error('Invalid subItem:', subItem);
     }
   }
-  // console.log('updated data', temp);
-  return temp;
+  console.log(result,'result');
+  return result;
 };
 
 async function base64ToFile(base64String, fileName, mimeType) {
