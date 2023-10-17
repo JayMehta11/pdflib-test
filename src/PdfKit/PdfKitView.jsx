@@ -28,7 +28,7 @@ const PdfKitView = () => {
   };
 
   const updateMetadataWithCSVAnswers =  (csvData,value) => {
-    console.log(value,"?")
+    console.count("updateMeta")
     const updatedMetadata = value.metaData.map((metadataItem) => {
       // console.log(metadataItem,"metadataitem")
       const question = metadataItem.item;
@@ -53,8 +53,9 @@ const PdfKitView = () => {
 
   const onCreate = async () => {
     const csvDataLength = csvData.length;
+    console.count("onCreate")
     const value = await PdfKitGenOMR(setPdf,csvDataLength);
-    console.log(value)
+    // console.log(value)
     setMetadata(value)
     setPdf(value);
     // console.log(csvData)
