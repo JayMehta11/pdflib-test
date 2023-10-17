@@ -1,20 +1,64 @@
-import React from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import Papa from 'papaparse';
+import React, { useEffect,useState } from 'react';
 
 import { PdfKitGenOMR } from './PdfKitGenOMR';
 
 const PdfKitView = () => {
   const [pdf, setPdf] = useState('');
+  const [csvData, setCsvData] = useState([]);
+  // eslint-disable-next-line unused-imports/no-unused-vars, no-unused-vars
+  const [metadata, setMetadata] = useState([]); // Initialize metadata as an empty array
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      Papa.parse(file, {
+        complete: (result) => {
+          // Store the CSV data in state
+          setCsvData(result.data);
+          console.log('CSV data:', result.data);
+
+          // After loading the CSV data, update the metadata
+          // updateMetadataWithCSVAnswers(result.data);
+        },
+        header: true,
+        skipEmptyLines: true, // If the first row contains column headers
+      });
+    }
+  };
+
+  const updateMetadataWithCSVAnswers =  (csvData,value) => {
+    console.log(value,"?")
+    const updatedMetadata = value.metaData.map((metadataItem) => {
+      // console.log(metadataItem,"metadataitem")
+      const question = metadataItem.item;
+      const answer = csvData.find((csvRow) => csvRow['Questions'] === question); // Replace 'Question' with the header of the 2nd column in your CSV
+      // console.log(question,answer)
+      if (answer) {
+
+        metadataItem.ans = answer['Answers']; // Replace 'Answers' with the header of the 3rd column in your CSV
+      }
+      
+      return metadataItem;
+    });
+    console.log(updatedMetadata)
+
+    setMetadata(updatedMetadata);
+    // console.log('Updated metadata:', updatedMetadata);
+  };
 
   useEffect(() => {
-    onCreate();
+    // onCreate();
   }, []);
 
   const onCreate = async () => {
-    const value = await PdfKitGenOMR(setPdf);
-    // console.log('value', value);
-    // setPdf(value);
+    const csvDataLength = csvData.length;
+    const value = await PdfKitGenOMR(setPdf,csvDataLength);
+    console.log(value)
+    setMetadata(value)
+    setPdf(value);
+    // console.log(csvData)
+    updateMetadataWithCSVAnswers(csvData,value)
   };
 
   return (
@@ -25,10 +69,15 @@ const PdfKitView = () => {
         id='pdfDoc'
         data={pdf}
       >
-        <p>unable to display file</p>
+        <p>Unable to display file</p>
       </object>
-      <button onClick={onCreate}>Create a pdfkit</button>
-      {/* <img id='image64' src='/SmartPaperLogo.jpeg' style={{display:'none'}} alt='test' ></img> */}
+      <button onClick={onCreate}>Create a pdfkit</button><button>
+      <input
+        type='file'
+        accept='.csv'
+        onChange={handleFileUpload}
+        style={{ margin: '10px 0' }}
+      />Upload CSV</button>
     </div>
   );
 };

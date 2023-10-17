@@ -31,14 +31,13 @@ const header = async (doc) => {
   doc.text('ID:', 330, 80);
   doc.rect(390, 75, 150, 25).lineWidth(2).stroke(); // Draw a box for ID
 };
-
-const questionsTotal = 90;
+// const questionsTotal = csvDataLength
 const circles = [];
 // const rectangles =[]
 
-const body = async (doc) => {
+const body = async (doc,questionsTotal) => {
   const metadata = [];
-
+console.log(questionsTotal)
   // const width = 1.3892621959414058;
   // const hgt = 1.3897302497951038;
 
@@ -83,7 +82,7 @@ const body = async (doc) => {
       const cryptID = crypto.randomUUID();
       const object = {
         item: `${qNum}`,
-        ans: ['D'],
+        ans: 'D',
         modelType: 'mathpix',
         contentType: 'question',
         contentSubType: 'OMR',
@@ -138,6 +137,8 @@ const body = async (doc) => {
     for (const circle of circles) {
       doc.circle(circle.x, circle.y, circle.r).stroke();
     }
+    console.log(metadata,"METADATA")
+
   } else if (questionsTotal < 61 && questionsTotal > 40) {
     doc.moveTo(185, 125).lineTo(185, 785).lineWidth(2).dash(3, { space: 5 }).stroke();
     doc.moveTo(377, 125).lineTo(377, 785).lineWidth(2).dash(3, { space: 5 }).stroke();
@@ -182,7 +183,7 @@ const body = async (doc) => {
       const cryptID = crypto.randomUUID();
       const object = {
         item: `${qNum}`,
-        ans: ['D'],
+        ans: 'D',
         modelType: 'mathpix',
         contentType: 'question',
         contentSubType: 'OMR',
@@ -237,6 +238,8 @@ const body = async (doc) => {
     for (const circle of circles) {
       doc.circle(circle.x, circle.y, circle.r).stroke();
     }
+    // console.log(metadata,"METADATA")
+
 
   } else if (questionsTotal < 41 && questionsTotal > 20) {
     doc.moveTo(300, 175).lineTo(300, 770).lineWidth(2).dash(3, { space: 5 }).stroke();
@@ -275,7 +278,7 @@ const body = async (doc) => {
       const cryptID = crypto.randomUUID();
       const object = {
         item: `${qNum}`,
-        ans: ['D'],
+        ans: 'D',
         modelType: 'mathpix',
         contentType: 'question',
         contentSubType: 'OMR',
@@ -327,9 +330,11 @@ const body = async (doc) => {
       metadata.push(object);
       currentY += 27;
     }
+    
     for (const circle of circles) {
       doc.circle(circle.x, circle.y, circle.r).stroke();
     }
+    // console.log(metadata,"METADATA")
   } else {
     doc.undash();
     const startX1 = 220;
@@ -362,7 +367,7 @@ const body = async (doc) => {
       const cryptID = crypto.randomUUID();
       const object = {
         item: `${qNum}`,
-        ans: ['D'],
+        ans: 'D',
         modelType: 'mathpix',
         contentType: 'question',
         contentSubType: 'OMR',
@@ -418,6 +423,7 @@ const body = async (doc) => {
       doc.circle(circle.x, circle.y, circle.r).stroke();
     }
   }
+  // console.log(metadata,"METADATA")
   return metadata;
 };
 
@@ -468,7 +474,7 @@ const qrCode = async (doc) => {
   doc.image(`${qr4base64}`, 550, 795, { scale: 0.07 });
 };
 
-export const PdfKitGenOMR = async (setPdf) => {
+export const PdfKitGenOMR = async (setPdf,csvDataLength) => {
   const doc = new PDFDocument({
     size: 'A4',
     margins: { top: 10, bottom: 10, left: 10, right: 10 },
@@ -480,7 +486,7 @@ export const PdfKitGenOMR = async (setPdf) => {
   await header(doc);
 
   doc.moveTo(0, 120).lineTo(615, 120).lineWidth(2).dash(3, { space: 5 }).stroke();
-  const metaData = await body(doc);
+  const metaData = await body(doc,csvDataLength);
 
   await footer(doc);
 
@@ -498,6 +504,7 @@ export const PdfKitGenOMR = async (setPdf) => {
     const tileWidth = doc.page.width;
     const FIXED_HT = 1280;
     // console.log(tileHeight,tileWidth,'blob');
+    // eslint-disable-next-line unused-imports/no-unused-vars, no-unused-vars
     const coords = new Promise((resolve, reject) => {
       imgNew.onload = (prop) => {
         console.log("test",imgNew.height,prop.naturalHeight);
@@ -514,8 +521,9 @@ export const PdfKitGenOMR = async (setPdf) => {
           resolve(
             factorizeCoordinates({
               data: metaData,
-              imageHeight: imgNew.height/factor,
-              imageWidth: imgNew.width/factor,
+              //image dimensions will be constant
+              imageHeight: 1170,
+              imageWidth: 827,
               tileHeight: tileHeight,
               tileWidth: tileWidth,
             })
@@ -554,10 +562,11 @@ export const PdfKitGenOMR = async (setPdf) => {
         reject(error);
       };
     });
-    console.log('facorized coords', coords);
+    // console.log('facorized coords', coords);
   });
 
   doc.end();
+  return{metaData}
 };
 
 const factorizeCoordinates = ({ data, imageHeight, imageWidth, tileHeight, tileWidth }) => {
