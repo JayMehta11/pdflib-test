@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import React, { useEffect,useState } from 'react';
 
-import { PdfKitGenOMR } from './PdfKitGenOMR';
+import { OmrPdfGenerator } from './PdfKitGenOMR';
 
 const PdfKitView = () => {
   const [pdf, setPdf] = useState('');
@@ -15,7 +15,14 @@ const PdfKitView = () => {
       Papa.parse(file, {
         complete: (result) => {
           // Store the CSV data in state
-          setCsvData(result.data);
+          const newData = result.data.map((item)=>({
+            questionId :crypto.randomUUID(),
+            question:item.question,
+            answer:item.answer,
+
+          }))
+          console.log(newData)
+          setCsvData(newData);
           console.log('CSV data:', result.data);
 
           // After loading the CSV data, update the metadata
@@ -29,21 +36,21 @@ const PdfKitView = () => {
 
   const updateMetadataWithCSVAnswers =  (csvData,value) => {
     console.count("updateMeta")
-    const updatedMetadata = value.metaData.map((metadataItem) => {
+    const updatedMetadata = value.map((metadataItem) => {
       // console.log(metadataItem,"metadataitem")
       const question = metadataItem.item;
-      const answer = csvData.find((csvRow) => csvRow['Questions'] === question); // Replace 'Question' with the header of the 2nd column in your CSV
+      const answer = csvData.find((csvRow) => csvRow['question'] === question); // Replace 'Question' with the header of the 2nd column in your CSV
       // console.log(question,answer)
       if (answer) {
 
-        metadataItem.ans = answer['Answers']; // Replace 'Answers' with the header of the 3rd column in your CSV
+        metadataItem.ans = [answer['answer']]; // Replace 'Answers' with the header of the 3rd column in your CSV
       }
       
       return metadataItem;
     });
-    console.log(updatedMetadata)
-
+    
     setMetadata(updatedMetadata);
+    console.log(updatedMetadata)
     // console.log('Updated metadata:', updatedMetadata);
   };
 
@@ -52,14 +59,19 @@ const PdfKitView = () => {
   }, []);
 
   const onCreate = async () => {
-    const csvDataLength = csvData.length;
+    // const csvDataLength = csvData.length;
     console.count("onCreate")
-    const value = await PdfKitGenOMR(setPdf,csvDataLength);
+    const {PdfKitGenOMR} = await OmrPdfGenerator(csvData) 
+    const {blobUrl,questionMedata,tileHeight,tileWidth,characterCountArray} = await PdfKitGenOMR()
+    setMetadata(questionMedata);
+    setPdf(blobUrl);
+    // const value = await PdfKitGenOMR(setPdf,csvDataLength);
     // console.log(value)
-    setMetadata(value)
-    setPdf(value);
+    // setMetadata(value)
+    // setPdf(value);
     // console.log(csvData)
-    updateMetadataWithCSVAnswers(csvData,value)
+    console.log(questionMedata)
+    updateMetadataWithCSVAnswers(csvData,questionMedata)
   };
 
   return (
