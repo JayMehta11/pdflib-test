@@ -700,24 +700,26 @@ import { randomSequence } from './randomSequence';
 
  
 // import PDFDocument from 'pdfkit';
-export const OmrPdfGenerator = async questions => {
-  const s2 = randomSequence("OMRTestabcd")
+export const OmrPdfGenerator = async (questions,textAreaValue) => {
+  const s2 = randomSequence(textAreaValue)
   const header = async doc => {
     doc.fontSize(16);
  
     doc.font('Helvetica-Bold');
     // Add the test name and standard in the heading portion
-    doc.text('Grade 12 Biology (English medium)', 30, 20, { align: 'center' });
+    // doc.text('Grade 12 Biology (English medium)', 30, 20, { align: 'center' });
+    doc.text(textAreaValue, 30, 20, { align: 'center' });
+
     doc.text(`Mark the correct circle`, 30, 40, { align: 'center' });
  
     doc.font('Helvetica').fontSize(14);
  
-    doc.text('Question', 55, 20, { align: 'left' });
-    doc.text('90', 55, 40, { align: 'left' });
+    doc.text(`Questions ${questions.length}`, 50, 20, { align: 'left' });
+    // doc.text('90', 55, 40, { align: 'left' });
  
     doc.fontSize(16);
     // Name
-    doc.text('Name:', 50, 80);
+    doc.text('Name:', 15, 80);
     doc.rect(110, 75, 180, 25).lineWidth(2).stroke(); // Draw a box for Name
  
     // ID
@@ -726,419 +728,565 @@ export const OmrPdfGenerator = async questions => {
   };
  
   console.log('questions', questions);
+  console.log(textAreaValue)
   const questionsTotal = questions.length;
   const circles = [];
-  // const rectangles =[]
+  // const rectangles =[] 
+  
+  // const body = async doc => {
+  //   const metadata = [];
  
-  const body = async doc => {
-    const metadata = [];
+  //   // const width = 1.3892621959414058;
+  //   // const hgt = 1.3897302497951038;
  
-    // const width = 1.3892621959414058;
-    // const hgt = 1.3897302497951038;
+  //   if (questionsTotal > 60) {
+  //     doc
+  //       .moveTo(185, 125)
+  //       .lineTo(185, 785)
+  //       .lineWidth(2)
+  //       .dash(3, { space: 5 })
+  //       .stroke();
+  //     doc
+  //       .moveTo(377, 125)
+  //       .lineTo(377, 785)
+  //       .lineWidth(2)
+  //       .dash(3, { space: 5 })
+  //       .stroke();
  
-    if (questionsTotal > 60) {
-      doc
-        .moveTo(185, 125)
-        .lineTo(185, 785)
-        .lineWidth(2)
-        .dash(3, { space: 5 })
-        .stroke();
-      doc
-        .moveTo(377, 125)
-        .lineTo(377, 785)
-        .lineWidth(2)
-        .dash(3, { space: 5 })
-        .stroke();
+  //     doc.undash();
  
-      doc.undash();
+  //     const startX1 = 30;
+  //     const startX2 = 220;
+  //     const startX3 = 410;
  
-      const startX1 = 30;
-      const startX2 = 220;
-      const startX3 = 410;
+  //     let startY = 140;
+  //     let currentY = startY + 20;
  
-      let startY = 140;
-      let currentY = startY + 20;
+  //     for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+  //       let currentX = startX1;
+  //       if (qNum < 61 && qNum > 30) {
+  //         currentX = startX2;
+  //       } else if (qNum > 60) {
+  //         currentX = startX3;
+  //       }
  
-      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
-        let currentX = startX1;
-        if (qNum < 61 && qNum > 30) {
-          currentX = startX2;
-        } else if (qNum > 60) {
-          currentX = startX3;
-        }
+  //       if (qNum === 1 || qNum === 31 || qNum === 61) {
+  //         doc.font('Helvetica-Bold');
+  //         currentY = startY + 20;
+  //         doc.text('A', currentX + 35, currentY - 30).stroke();
+  //         doc.text('B', currentX + 60, currentY - 30).stroke();
+  //         doc.text('C', currentX + 85, currentY - 30).stroke();
+  //         doc.text('D', currentX + 110, currentY - 30).stroke();
+  //         doc.font('Helvetica');
+  //       }
  
-        if (qNum === 1 || qNum === 31 || qNum === 61) {
-          doc.font('Helvetica-Bold');
-          currentY = startY + 20;
-          doc.text('A', currentX + 35, currentY - 30).stroke();
-          doc.text('B', currentX + 60, currentY - 30).stroke();
-          doc.text('C', currentX + 85, currentY - 30).stroke();
-          doc.text('D', currentX + 110, currentY - 30).stroke();
-          doc.font('Helvetica');
-        }
+  //       doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY - 3);
+  //       doc.lineWidth(1);
+  //       circles.push({ x: currentX + 40, y: currentY + 3, r: 6 });
+  //       circles.push({ x: currentX + 65, y: currentY + 3, r: 6 });
+  //       circles.push({ x: currentX + 90, y: currentY + 3, r: 6 });
+  //       circles.push({ x: currentX + 115, y: currentY + 3, r: 6 });
  
-        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY - 3);
-        doc.lineWidth(1);
-        circles.push({ x: currentX + 40, y: currentY + 3, r: 6 });
-        circles.push({ x: currentX + 65, y: currentY + 3, r: 6 });
-        circles.push({ x: currentX + 90, y: currentY + 3, r: 6 });
-        circles.push({ x: currentX + 115, y: currentY + 3, r: 6 });
+  //       const cryptID = crypto.randomUUID();
+  //       const object = {
+  //         item: `${qNum}`,
+  //         ans: ['D'],
+  //         modelType: 'mathpix',
+  //         contentType: 'question',
+  //         contentSubType: 'OMR',
+  //         maxScore: 1,
+  //         difficulty: 50,
+  //         skills: [],
+  //         qBox: [],
+  //         ansBox: [
+  //           {
+  //             x: currentX + 33,
+  //             y: currentY - 4,
+  //             h: 17,
+  //             w: 17,
+  //             boxType: 'answer',
+  //             id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5'
+  //           },
+  //           {
+  //             x: currentX + 58,
+  //             y: currentY - 4,
+  //             h: 17,
+  //             w: 17,
+  //             boxType: 'answer',
+  //             id: '83fb375d-eba7-4027-b897-33577b143724'
+  //           },
+  //           {
+  //             x: currentX + 83,
+  //             y: currentY - 4,
+  //             h: 17,
+  //             w: 17,
+  //             boxType: 'answer',
+  //             id: '0d978f88-3f8a-4e32-a066-a6567022abd1'
+  //           },
+  //           {
+  //             x: currentX + 108,
+  //             y: currentY - 4,
+  //             h: 17,
+  //             w: 17,
+  //             boxType: 'answer',
+  //             id: '846811b1-ed46-468e-acac-845647b719ab'
+  //           }
+  //         ],
+  //         id: cryptID,
+  //         orientation: 'ltr',
+  //         rubric: '',
+  //         question: '',
+  //         language: 'english'
+  //       };
  
-        const cryptID = crypto.randomUUID();
-        const object = {
-          item: `${qNum}`,
-          ans: ['D'],
-          modelType: 'mathpix',
-          contentType: 'question',
-          contentSubType: 'OMR',
-          maxScore: 1,
-          difficulty: 50,
-          skills: [],
-          qBox: [],
-          ansBox: [
-            {
-              x: currentX + 33,
-              y: currentY - 4,
-              h: 17,
-              w: 17,
-              boxType: 'answer',
-              id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5'
-            },
-            {
-              x: currentX + 58,
-              y: currentY - 4,
-              h: 17,
-              w: 17,
-              boxType: 'answer',
-              id: '83fb375d-eba7-4027-b897-33577b143724'
-            },
-            {
-              x: currentX + 83,
-              y: currentY - 4,
-              h: 17,
-              w: 17,
-              boxType: 'answer',
-              id: '0d978f88-3f8a-4e32-a066-a6567022abd1'
-            },
-            {
-              x: currentX + 108,
-              y: currentY - 4,
-              h: 17,
-              w: 17,
-              boxType: 'answer',
-              id: '846811b1-ed46-468e-acac-845647b719ab'
-            }
-          ],
-          id: cryptID,
-          orientation: 'ltr',
-          rubric: '',
-          question: '',
-          language: 'english'
-        };
+  //       metadata.push(object);
+  //       currentY += 21;
+  //     }
+  //     for (const circle of circles) {
+  //       doc.circle(circle.x, circle.y, circle.r).stroke();
+  //     }
+  //   } else if (questionsTotal < 61 && questionsTotal > 40) {
+  //     doc
+  //       .moveTo(185, 125)
+  //       .lineTo(185, 785)
+  //       .lineWidth(2)
+  //       .dash(3, { space: 5 })
+  //       .stroke();
+  //     doc
+  //       .moveTo(377, 125)
+  //       .lineTo(377, 785)
+  //       .lineWidth(2)
+  //       .dash(3, { space: 5 })
+  //       .stroke();
  
-        metadata.push(object);
-        currentY += 21;
+  //     doc.undash();
+ 
+  //     const startX1 = 30;
+  //     const startX2 = 220;
+  //     const startX3 = 410;
+ 
+  //     let startY = 200;
+  //     let currentY = startY + 20;
+ 
+  //     const circles = [];
+  //     // const rectangles = [];
+ 
+  //     for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+  //       let currentX = startX1;
+  //       if (qNum < 41 && qNum > 20) {
+  //         currentX = startX2;
+  //       } else if (qNum > 40) {
+  //         currentX = startX3;
+  //       }
+ 
+  //       if (qNum === 1 || qNum === 21 || qNum === 41) {
+  //         doc.font('Helvetica-Bold');
+  //         currentY = startY + 20;
+  //         doc.text('A', currentX + 35, currentY - 30).stroke();
+  //         doc.text('B', currentX + 60, currentY - 30).stroke();
+  //         doc.text('C', currentX + 85, currentY - 30).stroke();
+  //         doc.text('D', currentX + 110, currentY - 30).stroke();
+  //         doc.font('Helvetica');
+  //       }
+ 
+  //       doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
+  //       doc.lineWidth(1);
+  //       circles.push({ x: currentX + 40, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 65, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 90, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
+ 
+  //       const cryptID = crypto.randomUUID();
+  //       const object = {
+  //         item: `${qNum}`,
+  //         ans: ['D'],
+  //         modelType: 'mathpix',
+  //         contentType: 'question',
+  //         contentSubType: 'OMR',
+  //         maxScore: 1,
+  //         difficulty: 50,
+  //         skills: [],
+  //         qBox: [],
+  //         ansBox: [
+  //           {
+  //             x: currentX + 33,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5'
+  //           },
+  //           {
+  //             x: currentX + 58,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '83fb375d-eba7-4027-b897-33577b143724'
+  //           },
+  //           {
+  //             x: currentX + 83,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '0d978f88-3f8a-4e32-a066-a6567022abd1'
+  //           },
+  //           {
+  //             x: currentX + 108,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '846811b1-ed46-468e-acac-845647b719ab'
+  //           }
+  //         ],
+  //         id: cryptID,
+  //         orientation: 'ltr',
+  //         rubric: '',
+  //         question: '',
+  //         language: 'english'
+  //       };
+ 
+  //       metadata.push(object);
+  //       currentY += 27;
+  //     }
+  //     for (const circle of circles) {
+  //       doc.circle(circle.x, circle.y, circle.r).stroke();
+  //     }
+  //   } else if (questionsTotal < 41 && questionsTotal > 20) {
+  //     doc
+  //       .moveTo(300, 175)
+  //       .lineTo(300, 770)
+  //       .lineWidth(2)
+  //       .dash(3, { space: 5 })
+  //       .stroke();
+  //     doc.undash();
+  //     const startX1 = 60;
+  //     const startX2 = 350;
+ 
+  //     let startY = 200;
+  //     let currentY = startY + 20;
+ 
+  //     const circles = [];
+ 
+  //     for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+  //       let currentX = startX1;
+  //       if (qNum < 41 && qNum > 20) {
+  //         currentX = startX2;
+  //       }
+ 
+  //       if (qNum === 1 || qNum === 21 || qNum === 41) {
+  //         doc.font('Helvetica-Bold');
+  //         currentY = startY + 20;
+  //         doc.text('A', currentX + 35, currentY - 30).stroke();
+  //         doc.text('B', currentX + 60, currentY - 30).stroke();
+  //         doc.text('C', currentX + 85, currentY - 30).stroke();
+  //         doc.text('D', currentX + 110, currentY - 30).stroke();
+  //         doc.font('Helvetica');
+  //       }
+ 
+  //       doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
+  //       doc.lineWidth(1);
+  //       circles.push({ x: currentX + 40, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 65, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 90, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
+ 
+  //       const cryptID = crypto.randomUUID();
+  //       const object = {
+  //         item: `${qNum}`,
+  //         ans: ['D'],
+  //         modelType: 'mathpix',
+  //         contentType: 'question',
+  //         contentSubType: 'OMR',
+  //         maxScore: 1,
+  //         difficulty: 50,
+  //         skills: [],
+  //         qBox: [],
+  //         ansBox: [
+  //           {
+  //             x: currentX + 33,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5'
+  //           },
+  //           {
+  //             x: currentX + 58,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '83fb375d-eba7-4027-b897-33577b143724'
+  //           },
+  //           {
+  //             x: currentX + 83,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '0d978f88-3f8a-4e32-a066-a6567022abd1'
+  //           },
+  //           {
+  //             x: currentX + 108,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '846811b1-ed46-468e-acac-845647b719ab'
+  //           }
+  //         ],
+  //         id: cryptID,
+  //         orientation: 'ltr',
+  //         rubric: '',
+  //         question: '',
+  //         language: 'english'
+  //       };
+ 
+  //       metadata.push(object);
+  //       currentY += 27;
+  //     }
+  //     for (const circle of circles) {
+  //       doc.circle(circle.x, circle.y, circle.r).stroke();
+  //     }
+  //   } else {
+  //     doc.undash();
+  //     const startX1 = 220;
+ 
+  //     let startY = 200;
+  //     let currentY = startY + 20;
+ 
+  //     const circles = [];
+ 
+  //     for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+  //       let currentX = startX1;
+ 
+  //       if (qNum === 1 || qNum === 21 || qNum === 41) {
+  //         doc.font('Helvetica-Bold');
+  //         currentY = startY + 20;
+  //         doc.text('A', currentX + 35, currentY - 30).stroke();
+  //         doc.text('B', currentX + 60, currentY - 30).stroke();
+  //         doc.text('C', currentX + 85, currentY - 30).stroke();
+  //         doc.text('D', currentX + 110, currentY - 30).stroke();
+  //         doc.font('Helvetica');
+  //       }
+ 
+  //       doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
+  //       doc.lineWidth(1);
+  //       circles.push({ x: currentX + 40, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 65, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 90, y: currentY + 7, r: 6 });
+  //       circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
+ 
+  //       const cryptID = crypto.randomUUID();
+  //       const object = {
+  //         item: `${qNum}`,
+  //         ans: ['D'],
+  //         modelType: 'mathpix',
+  //         contentType: 'question',
+  //         contentSubType: 'OMR',
+  //         maxScore: 1,
+  //         difficulty: 50,
+  //         skills: [],
+  //         qBox: [],
+  //         ansBox: [
+  //           {
+  //             x: currentX + 33,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5'
+  //           },
+  //           {
+  //             x: currentX + 58,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '83fb375d-eba7-4027-b897-33577b143724'
+  //           },
+  //           {
+  //             x: currentX + 83,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '0d978f88-3f8a-4e32-a066-a6567022abd1'
+  //           },
+  //           {
+  //             x: currentX + 108,
+  //             y: currentY - 4,
+  //             h: 14,
+  //             w: 14,
+  //             boxType: 'answer',
+  //             id: '846811b1-ed46-468e-acac-845647b719ab'
+  //           }
+  //         ],
+  //         id: cryptID,
+  //         orientation: 'ltr',
+  //         rubric: '',
+  //         question: '',
+  //         language: 'english'
+  //       };
+ 
+  //       metadata.push(object);
+  //       currentY += 27;
+  //     }
+  //     for (const circle of circles) {
+  //       doc.circle(circle.x, circle.y, circle.r).stroke();
+  //     }
+  //   }
+  //   return metadata;
+  // };
+  // const generateLayout = (doc, questionsTotal) => {
+  //   doc.undash(); // Remove any existing dash style
+  
+  //   const startX = [30, 220, 410]; // X positions for columns
+  //   const startY = 140; // Initial Y position
+  //   const rowSpacing = 21; // Vertical spacing between rows
+  //   const columnSpacing = 38; // Horizontal spacing between columns
+  
+  //   // Determine the number of rows and columns based on questionsTotal
+  //   let rows = Math.ceil(questionsTotal / startX.length);
+  //   let columns = startX.length;
+  
+  //   for (let column = 0; column < columns; column++) {
+  //     // Draw a dashed vertical line between columns
+  //     if (column > 0) {
+  //       doc
+  //         .moveTo(startX[column]-10, startY-10)
+  //         .lineTo(startX[column]-10, startY+40 + (rows - 1) * rowSpacing)
+  //         .lineWidth(2)
+  //         .dash(3, { space: 5 })
+  //         .stroke();
+  //     }
+  
+  //     for (let row = 0; row < rows; row++) {
+  //       const qNum = column * rows + row + 1;
+  //       const currentX = startX[column];
+  //       const currentY = startY + row * rowSpacing;
+  
+  //       // Draw question number
+  //       doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY - 3).font('Helvetica');
+  
+  //       // Draw circles for options A, B, C, D
+  //       for (let i = 0; i < 4; i++) {
+  //         doc.undash()
+  //         doc.circle(currentX + 35 + i * columnSpacing, currentY + 3, 6).stroke();
+  //       }
+  //     }
+  //   }
+  // };
+  const generateLayout = (doc, questionsTotal) => {
+    doc.undash(); // Remove any existing dash style
+  
+    const columns = questionsTotal >= 60 ? 3 : 2;
+    const startX = [30, 220, 410].slice(0, columns); // X positions for columns
+    const columnSpacing = 38; // Horizontal spacing between columns
+  
+    // Adjusted the condition here
+    const rows = questionsTotal >= 60 ? 30 : 20;
+    const startY = 140;
+    const rowSpacing = 21;
+  
+    for (let column = 0; column < columns; column++) {
+      if (column > 0) {
+        doc
+          .moveTo(startX[column] - 10, startY - 10)
+          .lineTo(startX[column] - 10, startY + 40 + (rows - 1) * rowSpacing)
+          .lineWidth(2)
+          .dash(3, { space: 5 })
+          .stroke();
       }
-      for (const circle of circles) {
-        doc.circle(circle.x, circle.y, circle.r).stroke();
-      }
-    } else if (questionsTotal < 61 && questionsTotal > 40) {
-      doc
-        .moveTo(185, 125)
-        .lineTo(185, 785)
-        .lineWidth(2)
-        .dash(3, { space: 5 })
-        .stroke();
-      doc
-        .moveTo(377, 125)
-        .lineTo(377, 785)
-        .lineWidth(2)
-        .dash(3, { space: 5 })
-        .stroke();
- 
-      doc.undash();
- 
-      const startX1 = 30;
-      const startX2 = 220;
-      const startX3 = 410;
- 
-      let startY = 200;
-      let currentY = startY + 20;
- 
-      const circles = [];
-      // const rectangles = [];
- 
-      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
-        let currentX = startX1;
-        if (qNum < 41 && qNum > 20) {
-          currentX = startX2;
-        } else if (qNum > 40) {
-          currentX = startX3;
+  
+      for (let row = 0; row < rows; row++) {
+        const qNum = column * rows + row + 1;
+        const currentX = startX[column];
+        const currentY = startY + row * rowSpacing;
+  
+        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY - 3).font('Helvetica');
+  
+        for (let i = 0; i < 4; i++) {
+          doc.undash();
+          doc.circle(currentX + 35 + i * columnSpacing, currentY + 3, 6).stroke();
         }
- 
-        if (qNum === 1 || qNum === 21 || qNum === 41) {
-          doc.font('Helvetica-Bold');
-          currentY = startY + 20;
-          doc.text('A', currentX + 35, currentY - 30).stroke();
-          doc.text('B', currentX + 60, currentY - 30).stroke();
-          doc.text('C', currentX + 85, currentY - 30).stroke();
-          doc.text('D', currentX + 110, currentY - 30).stroke();
-          doc.font('Helvetica');
-        }
- 
-        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
-        doc.lineWidth(1);
-        circles.push({ x: currentX + 40, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 65, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 90, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
- 
-        const cryptID = crypto.randomUUID();
-        const object = {
-          item: `${qNum}`,
-          ans: ['D'],
-          modelType: 'mathpix',
-          contentType: 'question',
-          contentSubType: 'OMR',
-          maxScore: 1,
-          difficulty: 50,
-          skills: [],
-          qBox: [],
-          ansBox: [
-            {
-              x: currentX + 33,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5'
-            },
-            {
-              x: currentX + 58,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '83fb375d-eba7-4027-b897-33577b143724'
-            },
-            {
-              x: currentX + 83,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '0d978f88-3f8a-4e32-a066-a6567022abd1'
-            },
-            {
-              x: currentX + 108,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '846811b1-ed46-468e-acac-845647b719ab'
-            }
-          ],
-          id: cryptID,
-          orientation: 'ltr',
-          rubric: '',
-          question: '',
-          language: 'english'
-        };
- 
-        metadata.push(object);
-        currentY += 27;
-      }
-      for (const circle of circles) {
-        doc.circle(circle.x, circle.y, circle.r).stroke();
-      }
-    } else if (questionsTotal < 41 && questionsTotal > 20) {
-      doc
-        .moveTo(300, 175)
-        .lineTo(300, 770)
-        .lineWidth(2)
-        .dash(3, { space: 5 })
-        .stroke();
-      doc.undash();
-      const startX1 = 60;
-      const startX2 = 350;
- 
-      let startY = 200;
-      let currentY = startY + 20;
- 
-      const circles = [];
- 
-      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
-        let currentX = startX1;
-        if (qNum < 41 && qNum > 20) {
-          currentX = startX2;
-        }
- 
-        if (qNum === 1 || qNum === 21 || qNum === 41) {
-          doc.font('Helvetica-Bold');
-          currentY = startY + 20;
-          doc.text('A', currentX + 35, currentY - 30).stroke();
-          doc.text('B', currentX + 60, currentY - 30).stroke();
-          doc.text('C', currentX + 85, currentY - 30).stroke();
-          doc.text('D', currentX + 110, currentY - 30).stroke();
-          doc.font('Helvetica');
-        }
- 
-        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
-        doc.lineWidth(1);
-        circles.push({ x: currentX + 40, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 65, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 90, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
- 
-        const cryptID = crypto.randomUUID();
-        const object = {
-          item: `${qNum}`,
-          ans: ['D'],
-          modelType: 'mathpix',
-          contentType: 'question',
-          contentSubType: 'OMR',
-          maxScore: 1,
-          difficulty: 50,
-          skills: [],
-          qBox: [],
-          ansBox: [
-            {
-              x: currentX + 33,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5'
-            },
-            {
-              x: currentX + 58,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '83fb375d-eba7-4027-b897-33577b143724'
-            },
-            {
-              x: currentX + 83,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '0d978f88-3f8a-4e32-a066-a6567022abd1'
-            },
-            {
-              x: currentX + 108,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '846811b1-ed46-468e-acac-845647b719ab'
-            }
-          ],
-          id: cryptID,
-          orientation: 'ltr',
-          rubric: '',
-          question: '',
-          language: 'english'
-        };
- 
-        metadata.push(object);
-        currentY += 27;
-      }
-      for (const circle of circles) {
-        doc.circle(circle.x, circle.y, circle.r).stroke();
-      }
-    } else {
-      doc.undash();
-      const startX1 = 220;
- 
-      let startY = 200;
-      let currentY = startY + 20;
- 
-      const circles = [];
- 
-      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
-        let currentX = startX1;
- 
-        if (qNum === 1 || qNum === 21 || qNum === 41) {
-          doc.font('Helvetica-Bold');
-          currentY = startY + 20;
-          doc.text('A', currentX + 35, currentY - 30).stroke();
-          doc.text('B', currentX + 60, currentY - 30).stroke();
-          doc.text('C', currentX + 85, currentY - 30).stroke();
-          doc.text('D', currentX + 110, currentY - 30).stroke();
-          doc.font('Helvetica');
-        }
- 
-        doc.font('Helvetica-Bold').text(`${qNum}`, currentX, currentY);
-        doc.lineWidth(1);
-        circles.push({ x: currentX + 40, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 65, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 90, y: currentY + 7, r: 6 });
-        circles.push({ x: currentX + 115, y: currentY + 7, r: 6 });
- 
-        const cryptID = crypto.randomUUID();
-        const object = {
-          item: `${qNum}`,
-          ans: ['D'],
-          modelType: 'mathpix',
-          contentType: 'question',
-          contentSubType: 'OMR',
-          maxScore: 1,
-          difficulty: 50,
-          skills: [],
-          qBox: [],
-          ansBox: [
-            {
-              x: currentX + 33,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '3ebeaf02-7ad6-4cc1-a69d-df7b3e1b3ec5'
-            },
-            {
-              x: currentX + 58,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '83fb375d-eba7-4027-b897-33577b143724'
-            },
-            {
-              x: currentX + 83,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '0d978f88-3f8a-4e32-a066-a6567022abd1'
-            },
-            {
-              x: currentX + 108,
-              y: currentY - 4,
-              h: 14,
-              w: 14,
-              boxType: 'answer',
-              id: '846811b1-ed46-468e-acac-845647b719ab'
-            }
-          ],
-          id: cryptID,
-          orientation: 'ltr',
-          rubric: '',
-          question: '',
-          language: 'english'
-        };
- 
-        metadata.push(object);
-        currentY += 27;
-      }
-      for (const circle of circles) {
-        doc.circle(circle.x, circle.y, circle.r).stroke();
       }
     }
+  };
+  
+  
+  const body = (doc, questionsTotal) => {
+    const metadata = [];
+  
+    if (questionsTotal > 0) {
+      generateLayout(doc, questionsTotal);
+  
+      // Generate metadata based on questionsTotal
+      for (let qNum = 1; qNum <= questionsTotal; qNum++) {
+        const cryptID = crypto.randomUUID();
+        const object = {
+          item: `${qNum}`,
+          ans: ['D'],
+          modelType: 'mathpix',
+          contentType: 'question',
+          contentSubType: 'OMR',
+          maxScore: 1,
+          difficulty: 50,
+          skills: [],
+          qBox: [],
+          ansBox: [
+            {
+              x: 33,
+              y: -4,
+              h: 14,
+              w: 14,
+              boxType: 'answer',
+              id: crypto.randomUUID(),
+            },
+            {
+              x: 58,
+              y: -4,
+              h: 14,
+              w: 14,
+              boxType: 'answer',
+              id: crypto.randomUUID(),
+            },
+            {
+              x: 83,
+              y: -4,
+              h: 14,
+              w: 14,
+              boxType: 'answer',
+              id: crypto.randomUUID(),
+            },
+            {
+              x: 108,
+              y: -4,
+              h: 14,
+              w: 14,
+              boxType: 'answer',
+              id: crypto.randomUUID(),
+            },
+          ],
+          id: cryptID,
+          orientation: 'ltr',
+          rubric: '',
+          question: '',
+          language: 'english',
+        };
+  
+        metadata.push(object);
+      }
+    }
+  
     return metadata;
   };
  
+
+  
   async function imageToBase64(url) {
     try {
       const response = await fetch(url);
@@ -1184,7 +1332,10 @@ export const OmrPdfGenerator = async questions => {
       margin: 3,
       type: 'image/jpeg'
     };
-    const img1 = await QRCode.toDataURL(`123`, opts);
+    const id = Math.round(s2() * 10000000);
+    // const img1 = await QRCode.toDataURL(`123`, opts);
+    const img1 = await QRCode.toDataURL(`${textAreaValue}-${id}`, opts);
+
     const img = await imageToBase64(img1);
     //   console.log('image', img);
     //   const qr1 = '/top_left.jpg';
@@ -1195,10 +1346,10 @@ export const OmrPdfGenerator = async questions => {
     //   const qr2base64 = await imageToBase64(qr2);
     //   const qr3base64 = await imageToBase64(qr3);
     //   const qr4base64 = await imageToBase64(qr4);
-    doc.image(`${img}`, 10, 10, { scale: 0.07 });
-    doc.image(`${img}`, 550, 10, { scale: 0.07 });
-    doc.image(`${img}`, 10, 795, { scale: 0.07 });
-    doc.image(`${img}`, 550, 795, { scale: 0.07 });
+    doc.image(`${img}`, 5, 5, { scale: 0.3 });
+    doc.image(`${img}`, 545, 5, { scale: 0.3 });
+    doc.image(`${img}`, 5, 795, { scale: 0.3 });
+    doc.image(`${img}`, 545, 795, { scale: 0.3 });
   };
  
   const PdfKitGenOMR = async () => {
@@ -1218,7 +1369,7 @@ export const OmrPdfGenerator = async questions => {
       .lineWidth(2)
       .dash(3, { space: 5 })
       .stroke();
-    const metaData = await body(doc);
+    const metaData = await body(doc,questionsTotal);
  
     await footer(doc);
  
