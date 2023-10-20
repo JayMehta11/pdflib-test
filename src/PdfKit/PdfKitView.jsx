@@ -34,23 +34,20 @@ const PdfKitView = () => {
     }
   };
 
-  const updateMetadataWithCSVAnswers = (csvData, value) => {
-    console.count("updateMeta");
-    const updatedMetadata = value.map((metadataItem) => {
-      // console.log(metadataItem,"metadataitem")
+  const updateMetadataWithCSVAnswers = (csvData, questionMedata) => {
+    const updatedMetadata = questionMedata.map((metadataItem) => {
       const question = metadataItem.item;
       const answer = csvData.find((csvRow) => csvRow["question"] === question); // Replace 'Question' with the header of the 2nd column in your CSV
-      // console.log(question,answer)
       if (answer) {
-        metadataItem.ans = [answer["answer"]]; // Replace 'Answers' with the header of the 3rd column in your CSV
+        metadataItem.ans = [answer["answer"]]; 
+        metadataItem.questionId =answer.questionId         // Replace 'Answers' with the header of the 3rd column in your CSV
       }
 
       return metadataItem;
     });
 
     setMetadata(updatedMetadata);
-    console.log(updatedMetadata);
-    // console.log('Updated metadata:', updatedMetadata);
+    console.log(updatedMetadata,"UPDATED");
   };
 
   useEffect(() => {
@@ -60,22 +57,24 @@ const PdfKitView = () => {
   const onCreate = async () => {
     // const csvDataLength = csvData.length;
     console.count("onCreate");
-    const { PdfKitGenOMR } = await OmrPdfGenerator(csvData,textAreaValue);
+    const { PdfKitGenOMR } = await OmrPdfGenerator(csvData, textAreaValue);
     const {
       blobUrl,
       questionMedata,
+      // eslint-disable-next-line unused-imports/no-unused-vars, no-unused-vars
       tileHeight,
+      // eslint-disable-next-line unused-imports/no-unused-vars, no-unused-vars
       tileWidth,
+      // eslint-disable-next-line unused-imports/no-unused-vars, no-unused-vars
       characterCountArray,
     } = await PdfKitGenOMR();
+    console.log(blobUrl,questionMedata,"blob")
     setMetadata(questionMedata);
     setPdf(blobUrl);
     // const value = await PdfKitGenOMR(setPdf,csvDataLength);
     // console.log(value)
     // setMetadata(value)
     // setPdf(value);
-    // console.log(csvData)
-    console.log(questionMedata);
     updateMetadataWithCSVAnswers(csvData, questionMedata);
   };
 
