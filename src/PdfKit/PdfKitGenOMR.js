@@ -14,7 +14,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 export const OmrPdfGenerator = async (questions, textAreaValue) => {
   const s2 = randomSequence(textAreaValue);
   const metadata = [];
-
+//metadata[0].push(obj)
   const addNameId = () => {
     const studentData = [
       { questionId: 6789, answerBoxId: 1234 },
@@ -99,7 +99,8 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
   console.log(textAreaValue);
   const questionsTotal = questions.length;
 
-  const body = (doc, questionsTotal) => {
+  const body = (doc, questionsTotal,questions) => {
+    console.log(questions)
     doc.undash(); // Remove any existing dash style
 
     const columns = 3;
@@ -144,8 +145,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
               `${qNum < 10 ? " " + qNum : qNum}`,
               currentX + 3,
               currentY + 3
-            ) // Adjusted the X position for numbers
-            .font("Helvetica");
+            ); // Adjusted the X position for numbers
 
           if (row === 0) {
             // Add options "A, B, C, D" above each circle in the first row
@@ -160,7 +160,6 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
             doc
               .text("D", currentX + 37 + 3 * columnSpacing, currentY - 25)
               .stroke();
-            doc.font("Helvetica");
           }
 
           // Store the coordinates of the answer boxes for this question
@@ -211,7 +210,8 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
           const cryptID = crypto.randomUUID();
           const object = {
             item: `${qNum}`,
-            ans: ["D"],
+            // ans:["D"],
+            ans: [`${questions[qNum-1].answer}`],
             modelType: "mathpix",
             contentType: "question",
             contentSubType: "OMR",
@@ -225,14 +225,15 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
             rubric: "",
             question: "",
             language: "english",
-            questionId: "",
+            // questionId: crypto.randomUUID(),
+            questionId:[`${questions[qNum-1].questionId}`],
           };
 
           metadata.push(object);
         }
       }
     }
-    // console.log(metadata, "META");
+    console.log(metadata, "META");
     return metadata;
   };
 
@@ -318,7 +319,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       .lineWidth(2)
       .dash(3, { space: 5 })
       .stroke();
-    const metaData = await body(doc, questionsTotal);
+    const metaData = await body(doc, questionsTotal,questions);
     console.log(metaData, "metaData");
 
     await footer(doc);
