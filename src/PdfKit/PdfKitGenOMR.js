@@ -19,12 +19,13 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
   let pageNum = 0;
   const totalPage = Math.ceil(questions.length / questionsPerPage);
   //metadata[0].push(obj)
+  
   const addNameId = () => {
     const studentData = [
       { questionId: 6789, answerBoxId: 1234 },
       { questionId: 1357, answerBoxId: 2468 },
     ];
-    metadata.push({
+    metadata[0].push({
       ansBox: [
         {
           x: 70,
@@ -37,7 +38,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       ],
       ans: [],
       qBox: [],
-      item: metadata.length + 1,
+      item: metadata[0].length + 1,
       modelType: "mathpix",
       contentType: "studentInfo",
       contentSubType: "name",
@@ -49,7 +50,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       question: "",
       language: "english",
     });
-    metadata.push({
+    metadata[0].push({
       ansBox: [
         {
           x: 270,
@@ -62,7 +63,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       ],
       ans: [],
       qBox: [],
-      item: metadata.length + 1,
+      item: metadata[0].length + 1,
       modelType: "mathpix",
       contentType: "studentInfo",
       contentSubType: "number",
@@ -80,24 +81,20 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
     doc.fontSize(16);
 
     doc.font("Helvetica-Bold");
-    // Add the test name and standard in the heading portion
     doc.text(textAreaValue, 30, 15, { align: "center" });
-    // doc.text(`Mark the correct circle`, 30, 30, { align: "center" });
-
+    
     doc.font("Helvetica").fontSize(14);
 
     doc.fontSize(16);
-    // Name
     doc.text("Name:", 10, 60);
-    doc.rect(70, 53, 140, 27).lineWidth(2).stroke(); // Draw a box for Name
-
-    // ID
+    doc.rect(70, 53, 140, 27).lineWidth(2).stroke(); 
+    
     doc.text("ID:", 230, 60);
-    doc.rect(270, 53, 120, 27).lineWidth(2).stroke(); // Draw a box for ID
-    //Updates the name and id of student in metadata
-    addNameId();
+    doc.rect(270, 53, 120, 27).lineWidth(2).stroke(); 
+    
+    // addNameId();
     doc.fontSize(14);
-    //marks
+    
     doc.text(`Maximum marks: ${questionsTotal}`, 410, 60);
   };
   console.log("questions", questions);
@@ -268,9 +265,8 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       .fill(null)
       .map(() => []);
 
-    const metadata = [];
-
-    if (questionsTotal > 0) {
+      
+      if (questionsTotal > 0) {
       let currentPage = 1; // Track the current page number
       let currentQuestion = 0; // Track the current question index
       doc.fontSize(12).text(`Page 1 of ${totalPage}`, 480, 805);
@@ -282,7 +278,8 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
           await qrCode(doc);
           footer(doc);
         }
-
+        
+        const pageData = [];
         // Iterate through columns and rows as before
         for (let column = 0; column < columns; column++) {
           if (column > 0) {
@@ -392,12 +389,14 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
               language: "english",
               questionId: [`${questions[qNum - 1].questionId}`],
             };
-            metadata.push(object);
+            pageData.push(object);
             currentQuestion++;
           }
         }
-
+        
         currentPage++;
+        metadata.push(pageData);
+        addNameId();
       }
     }
 
