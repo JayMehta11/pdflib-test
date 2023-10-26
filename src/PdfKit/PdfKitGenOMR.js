@@ -17,7 +17,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
   const questionsPerPage = 90;
   let questionsTotal = questions.length;
   let pageNum = 0;
-  const totalPages = Math.ceil(questionsTotal / questionsPerPage);
+  const totalPage = Math.ceil(questions.length / questionsPerPage);
   //metadata[0].push(obj)
   const addNameId = () => {
     const studentData = [
@@ -240,40 +240,15 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
   //   console.log(metadata, "META");
   //   return metadata;
   // };
-  const addPageNumber = async (doc) => {
-    // doc.addPage(1);
-    // doc.setFont('NotoSans-Regular', 'normal');
-    // doc.text(`Page 1 of ${pageNum}`, 365, 615);
-
-    // doc.switchToPage(1);
-
-    // doc.switchToPage(i); //reverse counter logic
-    
+  const addPageNumber = async (doc, currentPage) => {
+    doc.fontSize(12).font('Helvetica').text(`Page ${currentPage} of ${totalPage}`, 480, 805);
     doc
-    .moveTo(0, 110)
-    .lineTo(615, 110)
-    .lineWidth(2)
-    .dash(3, { space: 5 })
-    .stroke();
-    await header(doc);
-    await qrCode(doc);
-    footer(doc);
-    pageNum = pageNum + 1;
-    // doc.text(`Page ${pageNum} o ${totalPages}`, 365, 615);
-    
-    // for (let i = 2; i <= pageNum; i++) {
-    //   doc.page(i); //reverse counter logic
-    //   doc.text(`Page ${i} of ${pageNum}`, 365, 615);
-    //   doc
-    //     .moveTo(0, 110)
-    //     .lineTo(615, 110)
-    //     .lineWidth(2)
-    //     .dash(3, { space: 5 })
-    //     .stroke();
-    //   await header(doc);
-    //   await qrCode();
-    //   footer(doc);
-    // }
+      .moveTo(0, 110)
+      .lineTo(615, 110)
+      .lineWidth(2)
+      .dash(3, { space: 5 })
+      .stroke();
+    pageNum++;
   };
   const body = async (doc, questionsTotal, questions) => {
     console.log(questions);
@@ -298,24 +273,14 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
     if (questionsTotal > 0) {
       let currentPage = 1; // Track the current page number
       let currentQuestion = 0; // Track the current question index
-
-      doc.text(`Page 1 of ${totalPages}`, 365, 615);
+      doc.fontSize(12).text(`Page 1 of ${totalPage}`, 480, 805);
       while (currentQuestion < questionsTotal) {
-
         if (currentPage > 1) {
           doc.addPage();
-          await addPageNumber(doc);
-          // doc
-          //   .moveTo(0, 110)
-          //   .lineTo(615, 110)
-          //   .lineWidth(2)
-          //   .dash(3, { space: 5 })
-          //   .stroke();
-          // await header(doc);
-
-          // await qrCode(doc);
-          // footer(doc);
-          pageNum++; // Add a new page for questions beyond the first page
+          await addPageNumber(doc, currentPage);
+          await header(doc);
+          await qrCode(doc);
+          footer(doc);
         }
 
         // Iterate through columns and rows as before
