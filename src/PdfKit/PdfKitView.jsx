@@ -21,7 +21,7 @@ const PdfKitView = () => {
             question: item.question,
             answer: item.answer,
           }));
-          console.log(newData);
+          // console.log(newData);
           setCsvData(newData);
           console.log("CSV data:", result.data);
 

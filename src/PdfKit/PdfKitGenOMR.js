@@ -20,37 +20,16 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
   const totalPage = Math.ceil(questions.length / questionsPerPage);
   //metadata[0].push(obj)
   
-  const addNameId = () => {
+  const addId = async (doc) => {
     const studentData = [
       { questionId: 6789, answerBoxId: 1234 },
       { questionId: 1357, answerBoxId: 2468 },
     ];
-    metadata[0].push({
-      ansBox: [
-        {
-          x: 70,
-          y: 53,
-          w: 140,
-          h: 27,
-          id: studentData[0].answerBoxId,
-          boxType: "studentInfo",
-        },
-      ],
-      ans: [],
-      qBox: [],
-      item: metadata[0].length + 1,
-      modelType: "mathpix",
-      contentType: "studentInfo",
-      contentSubType: "name",
-      maxScore: 1,
-      difficulty: 50,
-      orientation: "ltr",
-      id: studentData[0].questionId,
-      rubric: "",
-      question: "",
-      language: "english",
-    });
-    metadata[0].push({
+    doc.undash();
+    doc.text("ID:", 230, 60);
+    doc.rect(270, 53, 120, 27).lineWidth(2).stroke(); 
+    
+    metadata[pageNum].push({
       ansBox: [
         {
           x: 270,
@@ -63,7 +42,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       ],
       ans: [],
       qBox: [],
-      item: metadata[0].length + 1,
+      item: metadata[pageNum].length + 1,
       modelType: "mathpix",
       contentType: "studentInfo",
       contentSubType: "number",
@@ -71,6 +50,41 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       difficulty: 50,
       orientation: "ltr",
       id: studentData[1].questionId,
+      rubric: "",
+      question: "",
+      language: "english",
+    });
+  }
+  const addName = async (doc) => {     
+    doc.text("Name:", 10, 60);
+    doc.rect(70, 53, 140, 27).lineWidth(2).stroke(); 
+    
+    const studentData = [
+      { questionId: 6789, answerBoxId: 1234 },
+      { questionId: 1357, answerBoxId: 2468 },
+    ];
+
+    metadata[pageNum].push({
+      ansBox: [
+        {
+          x: 70,
+          y: 53,
+          w: 140,
+          h: 27,
+          id: studentData[0].answerBoxId,
+          boxType: "studentInfo",
+        },
+      ],
+      ans: [],
+      qBox: [],
+      item: metadata[pageNum].length + 1,
+      modelType: "mathpix",
+      contentType: "studentInfo",
+      contentSubType: "name",
+      maxScore: 1,
+      difficulty: 50,
+      orientation: "ltr",
+      id: studentData[0].questionId,
       rubric: "",
       question: "",
       language: "english",
@@ -86,157 +100,16 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
     doc.font("Helvetica").fontSize(14);
 
     doc.fontSize(16);
-    doc.text("Name:", 10, 60);
-    doc.rect(70, 53, 140, 27).lineWidth(2).stroke(); 
-    
-    doc.text("ID:", 230, 60);
-    doc.rect(270, 53, 120, 27).lineWidth(2).stroke(); 
-    
+
+    // await addName(doc);
+    // await await addId(doc);
     // addNameId();
     doc.fontSize(14);
     
     doc.text(`Maximum marks: ${questionsTotal}`, 410, 60);
   };
   console.log("questions", questions);
-  // console.log(textAreaValue);
 
-  // const body = (doc, questionsTotal, questions) => {
-  //   console.log(questions);
-  //   doc.undash(); // Remove any existing dash style
-
-  //   const columns = 3;
-  //   const startX = [30, 220, 410].slice(0, columns); // X positions for columns
-  //   const columnSpacing = 38; // Horizontal spacing between columns
-
-  //   const rows = 30;
-  //   const startY = 155;
-  //   const rowSpacing = 21;
-  //   const dashedLineY = startY + 25 + (rows - 1) * rowSpacing; // Y position of the dashed horizontal line
-
-  //   // Create an array to store answer box positions for each question
-  //   const ansBoxes = Array(questionsTotal)
-  //     .fill(null)
-  //     .map(() => []);
-
-  //   if (questionsTotal > 0) {
-  //     for (let column = 0; column < columns; column++) {
-  //       if (column > 0) {
-  //         doc
-  //           .moveTo(startX[column] - 10, startY - 35)
-  //           .lineTo(startX[column] - 10, dashedLineY)
-  //           .lineWidth(2)
-  //           .dash(3, { space: 5 })
-  //           .stroke();
-  //       }
-
-  //       for (let row = 0; row < rows; row++) {
-  //         const qNum = (column * rows + row + 1) + (pageNum * questionsPerPage);
-
-  //         // Check if qNum exceeds questionsTotal
-  //         if (qNum > questionsTotal) {
-  //           break; // Exit the loop if we've reached the desired number of questions
-  //         }
-
-  //         const currentX = startX[column];
-  //         const currentY = startY + row * rowSpacing;
-
-  //         doc
-  //           .font("Helvetica-Bold")
-  //           .text(
-  //             `${qNum < 10 ? " " + qNum : qNum}`,
-  //             currentX + 3,
-  //             currentY + 3
-  //           ); // Adjusted the X position for numbers
-
-  //         if (row === 0) {
-  //           // Add options "A, B, C, D" above each circle in the first row
-  //           doc.font("Helvetica-Bold");
-  //           doc.text("A", currentX + 37, currentY - 25).stroke();
-  //           doc
-  //             .text("B", currentX + 37 + columnSpacing, currentY - 25)
-  //             .stroke();
-  //           doc
-  //             .text("C", currentX + 37 + 2 * columnSpacing, currentY - 25)
-  //             .stroke();
-  //           doc
-  //             .text("D", currentX + 37 + 3 * columnSpacing, currentY - 25)
-  //             .stroke();
-  //         }
-
-  //         // Store the coordinates of the answer boxes for this question
-  //         ansBoxes[qNum - 1] = [
-  //           {
-  //             x: currentX + 35, // Adjusted X position for answer box
-  //             y: currentY - 4,
-  //             h: 14,
-  //             w: 14,
-  //             boxType: "answer",
-  //             id: crypto.randomUUID(),
-  //           },
-  //           {
-  //             x: currentX + 35 + columnSpacing,
-  //             y: currentY - 4,
-  //             h: 14,
-  //             w: 14,
-  //             boxType: "answer",
-  //             id: crypto.randomUUID(),
-  //           },
-  //           {
-  //             x: currentX + 35 + 2 * columnSpacing,
-  //             y: currentY - 4,
-  //             h: 14,
-  //             w: 14,
-  //             boxType: "answer",
-  //             id: crypto.randomUUID(),
-  //           },
-  //           {
-  //             x: currentX + 35 + 3 * columnSpacing,
-  //             y: currentY - 4,
-  //             h: 14,
-  //             w: 14,
-  //             boxType: "answer",
-  //             id: crypto.randomUUID(),
-  //           },
-  //         ];
-
-  //         for (let i = 0; i < 4; i++) {
-  //           doc.undash();
-  //           const circleY = currentY + 3 + 6; // Adjust Y position for circles
-  //           doc
-  //             .lineWidth(1)
-  //             .circle(currentX + 42 + i * columnSpacing, circleY, 6)
-  //             .stroke();
-  //         }
-
-  //         const cryptID = crypto.randomUUID();
-  //         const object = {
-  //           item: `${qNum}`,
-  //           // ans:["D"],
-  //           ans: [`${questions[qNum - 1].answer}`],
-  //           modelType: "mathpix",
-  //           contentType: "question",
-  //           contentSubType: "OMR",
-  //           maxScore: 1,
-  //           difficulty: 50,
-  //           skills: [],
-  //           qBox: [],
-  //           ansBox: ansBoxes[qNum - 1], // Use the answer box positions for this question
-  //           id: cryptID,
-  //           orientation: "ltr",
-  //           rubric: "",
-  //           question: "",
-  //           language: "english",
-  //           // questionId: crypto.randomUUID(),
-  //           questionId: [`${questions[qNum - 1].questionId}`],
-  //         };
-
-  //         metadata.push(object);
-  //       }
-  //     }
-  //   }
-  //   console.log(metadata, "META");
-  //   return metadata;
-  // };
   const addPageNumber = async (doc, currentPage) => {
     doc.fontSize(12).font('Helvetica').text(`Page ${currentPage} of ${totalPage}`, 480, 805);
     doc
@@ -245,7 +118,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       .lineWidth(2)
       .dash(3, { space: 5 })
       .stroke();
-    pageNum++;
+    pageNum += 1;
   };
   const body = async (doc, questionsTotal, questions) => {
     console.log(questions);
@@ -274,7 +147,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
         if (currentPage > 1) {
           doc.addPage();
           await addPageNumber(doc, currentPage);
-          await header(doc);
+          // await addId(doc);
           await qrCode(doc);
           footer(doc);
         }
@@ -393,10 +266,16 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
             currentQuestion++;
           }
         }
-        
-        currentPage++;
         metadata.push(pageData);
-        addNameId();
+        if(currentPage===1){
+          await addName(doc);
+          await addId(doc);
+        }
+        else{
+          await addId(doc);
+        }
+        currentPage++;
+        // addNameId();
       }
     }
 
@@ -490,7 +369,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       .stroke();
     footer(doc);
     const metaData = await body(doc, questionsTotal, questions);
-    console.log(metaData, "metaData");
+    // console.log(metaData, "metaData");
 
     const blobUrl = new Promise((resolve, reject) => {
       stream.on("finish", async function () {
