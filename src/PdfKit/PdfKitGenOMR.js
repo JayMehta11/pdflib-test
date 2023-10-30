@@ -198,6 +198,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
                 .stroke();
             }
 
+            doc.rect(currentX+35,currentY+2,14,14)
             // Store the coordinates of the answer boxes for this question
             ansBoxes[qNum - 1] = [
               {
