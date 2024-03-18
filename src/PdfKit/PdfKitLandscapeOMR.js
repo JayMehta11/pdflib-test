@@ -11,7 +11,7 @@ import { randomSequence } from "./randomSequence";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 // import PDFDocument from 'pdfkit';
-export const OmrPdfGenerator = async (questions, textAreaValue) => {
+export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
   const s2 = randomSequence(textAreaValue);
   const metadata = [];
   const questionsPerPage = 90;
@@ -19,37 +19,72 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
   let pageNum = 0;
   const totalPage = Math.ceil(questions.length / questionsPerPage);
   //metadata[0].push(obj)
-  const addNameId = () => {
+  
+  const addId = async (doc) => {
     const studentData = [
       { questionId: 6789, answerBoxId: 1234 },
       { questionId: 1357, answerBoxId: 2468 },
     ];
-    metadata.push({
-      ansBox: [
-        {
-          x: 70,
-          y: 53,
-          w: 140,
-          h: 27,
-          id: studentData[0].answerBoxId,
-          boxType: "studentInfo",
-        },
-      ],
-      ans: [],
-      qBox: [],
-      item: metadata.length + 1,
-      modelType: "mathpix",
-      contentType: "studentInfo",
-      contentSubType: "name",
-      maxScore: 1,
-      difficulty: 50,
-      orientation: "ltr",
-      id: studentData[0].questionId,
-      rubric: "",
-      question: "",
-      language: "english",
-    });
-    metadata.push({
+    doc.undash();
+    doc.fontSize(10);
+    // doc.text("Roll No:", 10, 105);
+    // doc.rect(70, 95, 440, 27).lineWidth(2).stroke(); 
+    doc.text("Roll No:", 9, 115);
+    // doc.rect(50, 110, 490, 20).lineWidth(1).stroke(); // Draw a box for ID
+    const currentY=110;
+    const currentX=30;
+    for (let i = 0; i < 4; i++) {
+      doc.undash();
+      const circleY = currentY + 9; // Adjust Y position for circles
+      const circleX = currentX + 42 + i * 19 - 4; // Adjust X position for circles
+      doc
+          .lineWidth(1)
+          .circle(circleX, circleY, 6) // Increase circle size to accommodate numbers
+          .stroke();
+      // Add numbers 0-9 inside each circle
+      const number = (i).toString(); // Adjusted to display numbers 0-9 horizontally
+      const numberX = circleX - 3; // Adjust X position for numbers
+      const numberY = circleY - 4; // Adjust Y position for numbers
+      doc
+          .fontSize(10)
+          .text(number, numberX, numberY); 
+    }
+    for (let i = 5; i < 15; i++) {
+      doc.undash();
+      const circleY = currentY + 3 + 6; // Adjust Y position for circles
+      const circleX = currentX + 42 + (i) * 19 - 4; // Adjust X position for circles
+      doc
+          .lineWidth(1)
+          .circle(circleX, circleY, 6) // Increase circle size to accommodate numbers
+          .stroke();
+      // Add numbers 0-9 inside each circle
+      const number = (i-5).toString(); // Adjusted to display numbers 0-9 horizontally
+      const numberX = circleX - 3; // Adjust X position for numbers
+      const numberY = circleY - 4; // Adjust Y position for numbers
+      doc
+          .fontSize(10)
+          .text(number, numberX, numberY); 
+    }
+    for (let i = 16; i < 26; i++) {
+      doc.undash();
+      const circleY = currentY + 3 + 6; // Adjust Y position for circles
+      const circleX = currentX + 42 + (i) * 19 - 4; // Adjust X position for circles
+      doc
+          .lineWidth(1)
+          .circle(circleX, circleY, 6) // Increase circle size to accommodate numbers
+          .stroke();
+      // Add numbers 0-9 inside each circle
+      const number = (i-16).toString(); // Adjusted to display numbers 0-9 horizontally
+      const numberX = circleX - 3; // Adjust X position for numbers
+      const numberY = circleY - 4; // Adjust Y position for numbers
+      doc
+          .fontSize(10)
+          .text(number, numberX, numberY); 
+    }
+
+  
+
+    metadata[pageNum].push({
       ansBox: [
         {
           x: 270,
@@ -62,7 +97,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       ],
       ans: [],
       qBox: [],
-      item: metadata.length + 1,
+      item: metadata[pageNum].length + 1,
       modelType: "mathpix",
       contentType: "studentInfo",
       contentSubType: "number",
@@ -74,92 +109,131 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
       question: "",
       language: "english",
     });
+  }
+  const addName = async (doc) => {     
+    // doc.text("Name:", 10, 60);
+    // doc.rect(70, 53, 440, 27).lineWidth(2).stroke(); 
+    doc.fontSize(10);
+    doc.text("Name:", 10, 80);
+    doc.rect(50, 75, 490, 20).lineWidth(1).stroke();
+    
+    const studentData = [
+      { questionId: 6789, answerBoxId: 1234 },
+      { questionId: 1357, answerBoxId: 2468 },
+    ];
+
+    metadata[pageNum].push({
+      ansBox: [
+        {
+          x: 70,
+          y: 53,
+          w: 140,
+          h: 27,
+          id: studentData[0].answerBoxId,
+          boxType: "studentInfo",
+        },
+      ],
+      ans: [],
+      qBox: [],
+      item: metadata[pageNum].length + 1,
+      modelType: "mathpix",
+      contentType: "studentInfo",
+      contentSubType: "name",
+      maxScore: 1,
+      difficulty: 50,
+      orientation: "ltr",
+      id: studentData[0].questionId,
+      rubric: "",
+      question: "",
+      language: "english",
+    });
   };
   const header = async (doc) => {
     doc.undash();
-    doc.fontSize(16);
+    doc.fontSize(14);
 
     doc.font("Helvetica-Bold");
-   
-    doc.text(textAreaValue, 30, 15, { align: "center" });
+    // Add the test name and standard in the heading portion
+    doc.text(textAreaValue, 30, 55, { align: "center" });
+    doc.fontSize(12);
 
+    doc.text("Loyola School", 30, 15, { align: "center" });
+     // Draw a box for Date
+    doc.text("Date:", 420, 17);
+    doc.rect(450, 12, 90, 22).lineWidth(1).stroke(); // Draw a box for Name
+
+    doc.text("Std:11", 30, 35, { align: "center" });
+
+    // doc.text(Mark the correct circle, 30, 30, { align: "center" });
 
     doc.font("Helvetica").fontSize(14);
 
-    doc.fontSize(16);
-    // Name
-    doc.text("Name:", 10, 60);
-    doc.rect(70, 53, 140, 27).lineWidth(2).stroke(); 
+    doc.fontSize(10);
 
-    // ID
-    doc.text("ID:", 230, 60);
-    doc.rect(270, 53, 120, 27).lineWidth(2).stroke(); 
-
-    addNameId();
     doc.fontSize(14);
     //marks
-    doc.text(`Maximum marks: ${questionsTotal}`, 410, 60);
+    // doc.text(Maximum marks: ${questionsTotal}, 410, 60);
   };
   console.log("questions", questions);
-  // console.log(textAreaValue);
 
-  const addPageNumber = async (doc, currentPage) => {
-    doc.fontSize(12).font('Helvetica').text(`Page ${currentPage} of ${totalPage}`, 480, 805);
-    doc
-      .moveTo(0, 110)
-      .lineTo(615, 110)
-      .lineWidth(2)
-      .dash(3, { space: 5 })
-      .stroke();
-    pageNum++;
-  };
+  // const addPageNumber = async (doc, currentPage) => {
+  //   doc.fontSize(12).font('Helvetica').text(`Page ${currentPage} of ${totalPage}`, 480, 805);
+  //   doc
+  //     .moveTo(0, 110)
+  //     .lineTo(615, 110)
+  //     .lineWidth(2)
+  //     .dash(3, { space: 5 })
+  //     .stroke();
+  //   pageNum += 1;
+  // };
   const body = async (doc, questionsTotal, questions) => {
     console.log(questions);
-    doc.undash(); 
+    doc.undash(); // Remove any existing dash style
 
-    const columns = 3;
-    const startX = [30, 220, 410].slice(0, columns);
-    const columnSpacing = 38; 
+    const columns = 5; // Changed to 5 columns
+    const startX = [10, 120, 230, 340, 450].slice(0, columns); // Adjusted X positions for 5 columns
+    const columnSpacing = 20; // Horizontal spacing between columns
 
-    const rows = 30;
-    const startY = 155;
+    const rows = 10; // Changed to 10 rows
+    const startY = 165;
     const rowSpacing = 21;
-    const dashedLineY = startY + 25 + (rows - 1) * rowSpacing;
+    const dashedLineY = startY + 25 + (rows - 1) * rowSpacing; // Y position of the dashed horizontal line
 
-   
+    // Create an array to store answer box positions for each question
     const ansBoxes = Array(questionsTotal)
       .fill(null)
       .map(() => []);
 
-    const metadata = [];
-
-    if (questionsTotal > 0) {
-      let currentPage = 1; 
-      let currentQuestion = 0; 
-      doc.fontSize(12).text(`Page 1 of ${totalPage}`, 480, 805);
+      
+      if (questionsTotal > 0) {
+      let currentPage = 1; // Track the current page number
+      let currentQuestion = 0; // Track the current question index
+      const totalPage = Math.ceil(questionsTotal / (columns * rows));
+      // doc.fontSize(12).text(`Page 1 of ${totalPage}`, 480, 805);
       while (currentQuestion < questionsTotal) {
         if (currentPage > 1) {
           doc.addPage();
-          await addPageNumber(doc, currentPage);
-          await header(doc);
+          // await addPageNumber(doc, currentPage);
+          // await addId(doc);
           await qrCode(doc);
-          footer(doc);
+          // footer(doc);
         }
-
+        
+        const pageData = [];
         // Iterate through columns and rows as before
         for (let column = 0; column < columns; column++) {
           if (column > 0) {
             doc
-              .moveTo(startX[column] - 10, startY - 35)
-              .lineTo(startX[column] - 10, dashedLineY)
-              .lineWidth(2)
+              .moveTo(startX[column]+4, startY - 15)
+              .lineTo(startX[column]+4, dashedLineY)
+              .lineWidth(1)
               .dash(3, { space: 5 })
               .stroke();
           }
 
           for (let row = 0; row < rows; row++) {
             // const qNum = currentQuestion + 1;
-            const qNum = column * rows + row + 1 + pageNum * questionsPerPage;
+            const qNum = column * rows + row + 1 + (currentPage - 1) * columns * rows;
             // Check if qNum exceeds questionsTotal
             if (qNum > questionsTotal) {
               break; // Exit the loop if we've reached the desired number of questions
@@ -172,22 +246,22 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
               .font("Helvetica-Bold")
               .text(
                 `${qNum < 10 ? " " + qNum : qNum}`,
-                currentX + 3,
+                currentX + 10,
                 currentY + 3
               ); // Adjusted the X position for numbers
 
             if (row === 0) {
-              
+              // Add options "A, B, C, D" above each circle in the first row
               doc.font("Helvetica-Bold");
-              doc.text("A", currentX + 37, currentY - 25).stroke();
+              doc.text("A", currentX + 37, currentY - 15).stroke();
               doc
-                .text("B", currentX + 37 + columnSpacing, currentY - 25)
+                .text("B", currentX + 37 + columnSpacing, currentY - 15)
                 .stroke();
               doc
-                .text("C", currentX + 37 + 2 * columnSpacing, currentY - 25)
+                .text("C", currentX + 37 + 2 * columnSpacing, currentY - 15)
                 .stroke();
               doc
-                .text("D", currentX + 37 + 3 * columnSpacing, currentY - 25)
+                .text("D", currentX + 37 + 3 * columnSpacing, currentY - 15)
                 .stroke();
             }
 
@@ -255,18 +329,27 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
               language: "english",
               questionId: [`${questions[qNum - 1].questionId}`],
             };
-            metadata.push(object);
+            pageData.push(object);
             currentQuestion++;
           }
         }
-
+        metadata.push(pageData);
+        if(currentPage===1){
+          doc.undash();
+          await addName(doc);
+          await addId(doc);
+        }
+        else{
+          await addId(doc);
+        }
         currentPage++;
+        // addNameId();
       }
     }
 
     console.log(metadata, "META");
     return metadata;
-  };
+};
 
   async function imageToBase64(url) {
     try {
@@ -285,25 +368,25 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
     }
   }
 
-  const footer = (doc) => {
-    doc
-      .moveTo(0, 790)
-      .lineTo(615, 790)
-      .lineWidth(2)
-      .dash(3, { space: 5 })
-      .stroke();
+  // const footer = (doc) => {
+  //   doc
+  //     .moveTo(0, 790)
+  //     .lineTo(615, 790)
+  //     .lineWidth(2)
+  //     .dash(3, { space: 5 })
+  //     .stroke();
 
-    // const imagePath = 'https://images.pexels.com/lib/api/pexels.png';
-    // const base64url = await imageToBase64(imagePath);
+  //   // const imagePath = 'https://images.pexels.com/lib/api/pexels.png';
+  //   // const base64url = await imageToBase64(imagePath);
 
-    //   const imagePath = '/SmartPaperLogo.jpeg';
+  //   //   const imagePath = '/SmartPaperLogo.jpeg';
 
-    //   const base64url = await imageToBase64(imagePath);
-    //   doc.image(`${base64url}`, 270, 800, { scale: 0.3 });
-    // console.log(base64url, 'base64url  ');
+  //   //   const base64url = await imageToBase64(imagePath);
+  //   //   doc.image(`${base64url}`, 270, 800, { scale: 0.3 });
+  //   // console.log(base64url, 'base64url  ');
 
-    // doc.quadraticCurveTo(130, 200, 150, 120).stroke();
-  };
+  //   // doc.quadraticCurveTo(130, 200, 150, 120).stroke();
+  // };
 
   const qrCode = async (doc) => {
     const opts = {
@@ -318,11 +401,10 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
     const img1 = await QRCode.toDataURL(`${textAreaValue}-${id}`, opts);
 
     const img = await imageToBase64(img1);
-
     doc.image(img, 5, 5, { scale: 0.3 });
     doc.image(img, 545, 5, { scale: 0.3 });
-    doc.image(img, 5, 795, { scale: 0.3 });
-    doc.image(img, 545, 795, { scale: 0.3 });
+    doc.image(img, 5, 390, { scale: 0.3 });
+    doc.image(img, 545, 390, { scale: 0.3 });
   };
 
   const PdfKitGenOMR = async () => {
@@ -338,15 +420,16 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
 
     await header(doc);
 
-    doc
-      .moveTo(0, 110)
-      .lineTo(615, 110)
-      .lineWidth(2)
-      .dash(3, { space: 5 })
-      .stroke();
-    footer(doc);
+    // doc
+    //   .moveTo(0, 110)
+    //   .lineTo(615, 110)
+    //   .lineWidth(2)
+    //   .dash(3, { space: 5 })
+    //   .stroke();
+
+    // footer(doc);
     const metaData = await body(doc, questionsTotal, questions);
-    console.log(metaData, "metaData");
+    // console.log(metaData, "metaData");
 
     const blobUrl = new Promise((resolve, reject) => {
       stream.on("finish", async function () {

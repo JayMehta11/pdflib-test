@@ -1,7 +1,7 @@
 import Papa from "papaparse";
 import React, { useEffect, useState } from "react";
 
-import { OmrPdfGenerator } from "./PdfKitGenOMR";
+import { OmrPdfGenerator50 } from "./PdfKitLandscapeOMR";
 
 const PdfKitView = () => {
   const [pdf, setPdf] = useState("");
@@ -58,7 +58,7 @@ const PdfKitView = () => {
   const onCreate = async () => {
     // const csvDataLength = csvData.length;
     console.count("onCreate");
-    const { PdfKitGenOMR } = await OmrPdfGenerator(csvData, textAreaValue);
+    const { PdfKitGenOMR } = await OmrPdfGenerator50(csvData, textAreaValue);
     const {
       blobUrl,
       questionMedata,
