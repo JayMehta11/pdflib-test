@@ -20,7 +20,7 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
   const totalPage = Math.ceil(questions.length / questionsPerPage);
   //metadata[0].push(obj)
   
-  const addId = async (doc) => {
+  const addId = async (doc,y) => {
     const studentData = [
       { questionId: 6789, answerBoxId: 1234 },
       { questionId: 1357, answerBoxId: 2468 },
@@ -29,9 +29,9 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
     doc.fontSize(10);
     // doc.text("Roll No:", 10, 105);
     // doc.rect(70, 95, 440, 27).lineWidth(2).stroke(); 
-    doc.text("Roll No:", 9, 115);
+    doc.text("Roll No:", 9, 115+y);
     // doc.rect(50, 110, 490, 20).lineWidth(1).stroke(); // Draw a box for ID
-    const currentY=110;
+    const currentY=110+y;
     const currentX=30;
     for (let i = 0; i < 4; i++) {
       doc.undash();
@@ -110,12 +110,13 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
       language: "english",
     });
   }
-  const addName = async (doc) => {     
+  const addName = async (doc,y) => {    
+
     // doc.text("Name:", 10, 60);
     // doc.rect(70, 53, 440, 27).lineWidth(2).stroke(); 
     doc.fontSize(10);
-    doc.text("Name:", 10, 80);
-    doc.rect(50, 75, 490, 20).lineWidth(1).stroke();
+    doc.text("Name:", 10, 80+y);
+    doc.rect(50, 75+y, 490, 20).lineWidth(1).stroke();
     
     const studentData = [
       { questionId: 6789, answerBoxId: 1234 },
@@ -148,21 +149,21 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
       language: "english",
     });
   };
-  const header = async (doc) => {
+  const header = async (doc,y) => {
     doc.undash();
     doc.fontSize(14);
 
     doc.font("Helvetica-Bold");
     // Add the test name and standard in the heading portion
-    doc.text(textAreaValue, 30, 55, { align: "center" });
+    doc.text(textAreaValue, 30, 55+y, { align: "center" });
     doc.fontSize(12);
 
-    doc.text("Loyola School", 30, 15, { align: "center" });
+    doc.text("Loyola School", 30, 15+y, { align: "center" });
      // Draw a box for Date
-    doc.text("Date:", 420, 17);
-    doc.rect(450, 12, 90, 22).lineWidth(1).stroke(); // Draw a box for Name
+    doc.text("Date:", 420, 17+y);
+    doc.rect(450, 12+y, 90, 22).lineWidth(1).stroke(); // Draw a box for Name
 
-    doc.text("Std:11", 30, 35, { align: "center" });
+    doc.text("Std:11", 30, 35+y, { align: "center" });
 
     // doc.text(Mark the correct circle, 30, 30, { align: "center" });
 
@@ -186,7 +187,7 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
   //     .stroke();
   //   pageNum += 1;
   // };
-  const body = async (doc, questionsTotal, questions) => {
+  const body = async (doc, questionsTotal, questions,startY) => {
     console.log(questions);
     doc.undash(); // Remove any existing dash style
 
@@ -195,7 +196,7 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
     const columnSpacing = 20; // Horizontal spacing between columns
 
     const rows = 10; // Changed to 10 rows
-    const startY = 165;
+    // const startY = 165;
     const rowSpacing = 21;
     const dashedLineY = startY + 25 + (rows - 1) * rowSpacing; // Y position of the dashed horizontal line
 
@@ -336,8 +337,10 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
         metadata.push(pageData);
         if(currentPage===1){
           doc.undash();
-          await addName(doc);
-          await addId(doc);
+          await addName(doc,0);
+          await addName(doc,421);
+          await addId(doc,0);
+          await addId(doc,421);
         }
         else{
           await addId(doc);
@@ -367,28 +370,8 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
       return null;
     }
   }
-
-  // const footer = (doc) => {
-  //   doc
-  //     .moveTo(0, 790)
-  //     .lineTo(615, 790)
-  //     .lineWidth(2)
-  //     .dash(3, { space: 5 })
-  //     .stroke();
-
-  //   // const imagePath = 'https://images.pexels.com/lib/api/pexels.png';
-  //   // const base64url = await imageToBase64(imagePath);
-
-  //   //   const imagePath = '/SmartPaperLogo.jpeg';
-
-  //   //   const base64url = await imageToBase64(imagePath);
-  //   //   doc.image(`${base64url}`, 270, 800, { scale: 0.3 });
-  //   // console.log(base64url, 'base64url  ');
-
-  //   // doc.quadraticCurveTo(130, 200, 150, 120).stroke();
-  // };
-
-  const qrCode = async (doc) => {
+ 
+  const qrCode = async (doc,y) => {
     const opts = {
       maskPattern: 1,
       // scale: 2,
@@ -401,10 +384,10 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
     const img1 = await QRCode.toDataURL(`${textAreaValue}-${id}`, opts);
 
     const img = await imageToBase64(img1);
-    doc.image(img, 5, 5, { scale: 0.3 });
-    doc.image(img, 545, 5, { scale: 0.3 });
-    doc.image(img, 5, 390, { scale: 0.3 });
-    doc.image(img, 545, 390, { scale: 0.3 });
+    doc.image(img, 5, 5+y, { scale: 0.3 });
+    doc.image(img, 545, 5+y, { scale: 0.3 });
+    doc.image(img, 5, 385+y, { scale: 0.3 });
+    doc.image(img, 545, 385+y, { scale: 0.3 });
   };
 
   const PdfKitGenOMR = async () => {
@@ -416,9 +399,9 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
 
     const stream = doc.pipe(BlobStream());
 
-    await qrCode(doc);
+    await qrCode(doc,0);
 
-    await header(doc);
+    await header(doc,0);
 
     // doc
     //   .moveTo(0, 110)
@@ -428,8 +411,19 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
     //   .stroke();
 
     // footer(doc);
-    const metaData = await body(doc, questionsTotal, questions);
+    const metaData = await body(doc, questionsTotal, questions,165);
     // console.log(metaData, "metaData");
+    doc.dash(5, { space: 5 })
+   .moveTo(0, 421) 
+   .lineTo(doc.page.width, 421) 
+   .stroke();
+
+    await qrCode(doc,421);
+
+    await header(doc,421);
+    await body(doc, questionsTotal, questions,585);
+    
+
 
     const blobUrl = new Promise((resolve, reject) => {
       stream.on("finish", async function () {
