@@ -23,7 +23,7 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
   const totalPage = Math.ceil(questions.length / questionsPerPage);
   //metadata[0].push(obj)
 
-  const addId = async (doc, y) => {
+  const addId = async (doc, y, upperLayout) => {
     const studentData = [
       { questionId: 6789, answerBoxId: 1234 },
       { questionId: 1357, answerBoxId: 2468 },
@@ -36,83 +36,73 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
     // doc.rect(50, 110, 490, 20).lineWidth(1).stroke(); // Draw a box for ID
     const currentY = 110 + y;
     const currentX = 30;
-    for (let i = 0; i < 4; i++) {
-      doc.undash();
-      const circleY = currentY + 9; // Adjust Y position for circles
-      const circleX = currentX + 42 + i * 19 - 4; // Adjust X position for circles
-      doc
-          .lineWidth(1)
-          .circle(circleX, circleY, 6) // Increase circle size to accommodate numbers
-          .stroke();
-      // Add numbers 0-9 inside each circle
-      const number = (i).toString(); // Adjusted to display numbers 0-9 horizontally
-      const numberX = circleX - 3; // Adjust X position for numbers
-      const numberY = circleY - 4; // Adjust Y position for numbers
-      doc
-          .fontSize(10)
-          .text(number, numberX, numberY); 
-    }
-    for (let i = 5; i < 15; i++) {
-      doc.undash();
-      const circleY = currentY + 3 + 6; // Adjust Y position for circles
-      const circleX = currentX + 42 + (i) * 19 - 4; // Adjust X position for circles
-      doc
-          .lineWidth(1)
-          .circle(circleX, circleY, 6) // Increase circle size to accommodate numbers
-          .stroke();
-      // Add numbers 0-9 inside each circle
-      const number = (i-5).toString(); // Adjusted to display numbers 0-9 horizontally
-      const numberX = circleX - 3; // Adjust X position for numbers
-      const numberY = circleY - 4; // Adjust Y position for numbers
-      doc
-          .fontSize(10)
-          .text(number, numberX, numberY); 
-    }
-    for (let i = 16; i < 26; i++) {
-      doc.undash();
-      const circleY = currentY + 3 + 6; // Adjust Y position for circles
-      const circleX = currentX + 42 + (i) * 19 - 4; // Adjust X position for circles
-      doc
-          .lineWidth(1)
-          .circle(circleX, circleY, 6) // Increase circle size to accommodate numbers
-          .stroke();
-      // Add numbers 0-9 inside each circle
-      const number = (i-16).toString(); // Adjusted to display numbers 0-9 horizontally
-      const numberX = circleX - 3; // Adjust X position for numbers
-      const numberY = circleY - 4; // Adjust Y position for numbers
-      doc
-          .fontSize(10)
-          .text(number, numberX, numberY); 
-    }
+    
+    const parts = [
+      { start: 0, end: 3 },
+      { start: 0, end: 9 },
+      { start: 0, end: 9 }
+    ];
   
-    metadata[pageNum].push({
-      ansBox: [
-        {
-          x: 270,
-          y: 53,
-          w: 120,
-          h: 27,
-          id: studentData[1].answerBoxId,
-          boxType: "studentInfo",
-        },
-      ],
-      ans: [],
-      qBox: [],
-      item: metadata[pageNum].length + 1,
-      modelType: "mathpix",
-      contentType: "studentInfo",
-      contentSubType: "number",
-      maxScore: 1,
-      difficulty: 50,
-      orientation: "ltr",
-      id: studentData[1].questionId,
-      rubric: "",
-      question: "",
-      language: "english",
-    });
-  }
-  const addName = async (doc, y) => {
+    let circleIndex = 0;
+    
+    for (const part of parts) {
+        for (let i = part.start; i <= part.end; i++) {
+            doc.undash();
+            const circleX = currentX + 42 + circleIndex * 19 - 4; // Adjust X position for circles
+            const circleY = currentY + 9; // Adjust Y position for circles
+            doc
+                .lineWidth(1)
+                .circle(circleX, circleY, 6) // Increase circle size to accommodate numbers
+                .stroke();
+    
+            // Add numbers inside each circle
+            const number = i.toString(); // Adjusted to display numbers 0-9 horizontally
+            const numberX = circleX - 3; // Adjust X position for numbers
+            const numberY = circleY - 4; // Adjust Y position for numbers
+            doc
+                .fontSize(10)
+                .text(number, numberX, numberY); 
+            circleIndex++;
+        }
+        circleIndex++;
+    }
+    // doc.rect(currentX+36+4*19-4,currentY+3,12,12);
+    const ansBoxId = [];
 
+    for (let i = 0; i < 26; i++) {
+        if (i !== 4 && i !== 15) {
+            ansBoxId.push({
+                x: currentX + 36 + i * 19 - 4,
+                y: currentY + 3,
+                w: 12,
+                h: 12,
+                id: studentData[1].answerBoxId,
+                boxType: "studentInfo"
+            });
+        }
+    }
+
+    if(upperLayout){
+      metadata[pageNum].push({
+        ansBox: ansBoxId,
+        ans: [],
+        qBox: [],
+        item: metadata[pageNum].length + 1,
+        modelType: "mathpix",
+        contentType: "studentInfo",
+        contentSubType: "number",
+        maxScore: 1,
+        difficulty: 50,
+        orientation: "ltr",
+        id: studentData[1].questionId,
+        rubric: "",
+        question: "",
+        language: "english",
+      });
+    }
+    
+  }
+  const addName = async (doc, y, upperLayout) => {
     // doc.text("Name:", 10, 60);
     // doc.rect(70, 53, 440, 27).lineWidth(2).stroke(); 
     doc.fontSize(10);
@@ -123,32 +113,34 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
       { questionId: 6789, answerBoxId: 1234 },
       { questionId: 1357, answerBoxId: 2468 },
     ];
-
-    metadata[pageNum].push({
-      ansBox: [
-        {
-          x: 70,
-          y: 53,
-          w: 140,
-          h: 27,
-          id: studentData[0].answerBoxId,
-          boxType: "studentInfo",
-        },
-      ],
-      ans: [],
-      qBox: [],
-      item: metadata[pageNum].length + 1,
-      modelType: "mathpix",
-      contentType: "studentInfo",
-      contentSubType: "name",
-      maxScore: 1,
-      difficulty: 50,
-      orientation: "ltr",
-      id: studentData[0].questionId,
-      rubric: "",
-      question: "",
-      language: "english",
-    });
+    if(upperLayout){
+      metadata[pageNum].push({
+        ansBox: [
+          {
+            x: 50,
+            y: 75+y,
+            w: 490,
+            h: 20,
+            id: studentData[0].answerBoxId,
+            boxType: "studentInfo",
+          },
+        ],
+        ans: [],
+        qBox: [],
+        item: metadata[pageNum].length + 1,
+        modelType: "mathpix",
+        contentType: "studentInfo",
+        contentSubType: "name",
+        maxScore: 1,
+        difficulty: 50,
+        orientation: "ltr",
+        id: studentData[0].questionId,
+        rubric: "",
+        question: "",
+        language: "english",
+      });
+    }
+    
   };
   const header = async (doc, y) => {
     doc.undash();
@@ -176,7 +168,7 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
     //marks
     // doc.text(Maximum marks: ${questionsTotal}, 410, 60);
   };
-  console.log("questions", questions);
+  // console.log("questions", questions);
 
   // const addPageNumber = async (doc, currentPage) => {
   //   doc.fontSize(12).font('Helvetica').text(`Page ${currentPage} of ${totalPage}`, 480, 805);
@@ -189,7 +181,7 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
   //   pageNum += 1;
   // };
   const body = async (doc, questionsTotal, questions, startY,upperLayout) => {
-    console.log(questions);
+    // console.log(questions);
     doc.undash(); // Remove any existing dash style
 
     const columns = 5; // Changed to 5 columns
@@ -339,13 +331,13 @@ export const OmrPdfGenerator50 = async (questions, textAreaValue) => {
 
         if (currentPage === 1) {
           doc.undash();
-          await addName(doc, 0);
-          await addName(doc, 421);
-          await addId(doc, 0);
-          await addId(doc, 421);
+          await addName(doc, 0,true);
+          await addName(doc, 421,false);
+          await addId(doc, 0,true);
+          await addId(doc, 421,false);
         }
         else {
-          await addId(doc);
+          // await addId(doc);
         }
         currentPage++;
         // addNameId();

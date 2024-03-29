@@ -89,19 +89,19 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
     doc.fontSize(16);
     // Name
     doc.text("Name:", 10, 60);
-    doc.rect(70, 53, 140, 27).lineWidth(2).stroke(); 
+    doc.rect(70, 53, 140, 27).lineWidth(2).stroke(); // Draw a box for Name
 
     // ID
     doc.text("ID:", 230, 60);
-    doc.rect(270, 53, 120, 27).lineWidth(2).stroke(); 
-
+    doc.rect(270, 53, 120, 27).lineWidth(2).stroke(); // Draw a box for ID
+    //Updates the name and id of student in metadata
     addNameId();
     doc.fontSize(14);
     //marks
     doc.text(`Maximum marks: ${questionsTotal}`, 410, 60);
   };
   console.log("questions", questions);
-  // console.log(textAreaValue);
+
 
   const addPageNumber = async (doc, currentPage) => {
     doc.fontSize(12).font('Helvetica').text(`Page ${currentPage} of ${totalPage}`, 480, 805);
@@ -115,18 +115,18 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
   };
   const body = async (doc, questionsTotal, questions) => {
     console.log(questions);
-    doc.undash(); 
+    doc.undash(); // Remove any existing dash style
 
     const columns = 3;
-    const startX = [30, 220, 410].slice(0, columns);
-    const columnSpacing = 38; 
+    const startX = [30, 220, 410].slice(0, columns); // X positions for columns
+    const columnSpacing = 38; // Horizontal spacing between columns
 
     const rows = 30;
     const startY = 155;
     const rowSpacing = 21;
-    const dashedLineY = startY + 25 + (rows - 1) * rowSpacing;
+    const dashedLineY = startY + 25 + (rows - 1) * rowSpacing; // Y position of the dashed horizontal line
 
-   
+    // Create an array to store answer box positions for each question
     const ansBoxes = Array(questionsTotal)
       .fill(null)
       .map(() => []);
@@ -134,8 +134,8 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
     const metadata = [];
 
     if (questionsTotal > 0) {
-      let currentPage = 1; 
-      let currentQuestion = 0; 
+      let currentPage = 1; // Track the current page number
+      let currentQuestion = 0; // Track the current question index
       doc.fontSize(12).text(`Page 1 of ${totalPage}`, 480, 805);
       while (currentQuestion < questionsTotal) {
         if (currentPage > 1) {
@@ -177,7 +177,7 @@ export const OmrPdfGenerator = async (questions, textAreaValue) => {
               ); // Adjusted the X position for numbers
 
             if (row === 0) {
-              
+              // Add options "A, B, C, D" above each circle in the first row
               doc.font("Helvetica-Bold");
               doc.text("A", currentX + 37, currentY - 25).stroke();
               doc
